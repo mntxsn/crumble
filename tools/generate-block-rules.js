@@ -2,6 +2,21 @@
 
 import { blockUrls } from "../src/data/rules.js";
 
+// declarativeNetRequest's initiatorDomains / excludedInitiatorDomains accept
+// bare host names only. Strip scheme, leading slashes, port, path, query, and
+// fragment — defensive against legacy entries in rules.js (a few of which
+// were full URLs and made Firefox reject the compiled ruleset).
+function normalizeDomain(s) {
+  if (typeof s !== "string") return s;
+  return s
+    .trim()
+    .replace(/^[a-z][a-z0-9+\-.]*:\/+/i, "")
+    .replace(/^\/+/, "")
+    .split(/[/?#]/)[0]
+    .split(":")[0]
+    .toLowerCase();
+}
+
 function generateDeclarativeNetRules() {
   const result = [];
   let lastId = 1;
@@ -18,7 +33,9 @@ function generateDeclarativeNetRules() {
     };
 
     if (blockRule.e) {
-      newRule.condition.excludedInitiatorDomains = blockRule.e.slice();
+      newRule.condition.excludedInitiatorDomains = blockRule.e
+        .map(normalizeDomain)
+        .filter(Boolean);
     }
 
     result.push(newRule);
@@ -42,7 +59,7 @@ function generateDeclarativeNetRules() {
       condition: {
         urlFilter: url[0],
         resourceTypes: ["script", "stylesheet", "xmlhttprequest", "image"],
-        initiatorDomains: [domain],
+        initiatorDomains: [normalizeDomain(domain)],
       },
     };
     result.push(newRule);

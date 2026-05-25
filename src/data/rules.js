@@ -20703,7 +20703,7 @@ const blockUrls = {
       { r: "jp2w.pl/a/cookie.js" },
       {
         r: "https://cdn.serviceform.com/serviceform-tools/privacy/sf-privacy-partner.js?v=nethit",
-        e: ["https://www.lumise.se/"],
+        e: ["lumise.se"],
       },
       {
         r: "cookieConsent.js",

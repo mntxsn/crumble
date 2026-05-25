@@ -903,7 +903,7 @@
     "condition": {
       "urlFilter": "https://cdn.serviceform.com/serviceform-tools/privacy/sf-privacy-partner.js?v=nethit",
       "resourceTypes": ["script", "stylesheet", "xmlhttprequest", "image"],
-      "excludedInitiatorDomains": ["https://www.lumise.se/"]
+      "excludedInitiatorDomains": ["lumise.se"]
     }
   },
   {
