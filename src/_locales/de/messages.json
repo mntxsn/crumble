@@ -116,6 +116,11 @@
     "description": "Helper text below the language selector."
   },
 
+  "commandToggleWhitelist": {
+    "message": "Erweiterung auf der aktuellen Seite umschalten",
+    "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
+  },
+
   "optionsGeneralSection": {
     "message": "Allgemein",
     "description": "Section heading for the general settings card."

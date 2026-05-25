@@ -69,12 +69,6 @@ body {
   outline-offset: 1px;
 }
 
-#toggle,
-#report,
-#refresh {
-  display: none;
-}
-
 #toggle {
   background: var(--accent);
   color: var(--accent-fg);

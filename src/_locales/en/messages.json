@@ -113,6 +113,11 @@
     "description": "Helper text below the language selector."
   },
 
+  "commandToggleWhitelist": {
+    "message": "Toggle the extension on the current site",
+    "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
+  },
+
   "optionThemeAuto": {
     "message": "Match system",
     "description": "Theme option: follow the operating system preference."

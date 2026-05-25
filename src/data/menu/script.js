@@ -158,19 +158,18 @@ function reloadMenu(enableRefreshButton) {
             message.tab.whitelisted ? "menuEnable" : "menuDisable",
             message.tab.hostname
           );
-          toggle.style.display = "block";
-
-          report.style.display = message.tab.whitelisted ? "none" : "block";
+          toggle.hidden = false;
+          report.hidden = Boolean(message.tab.whitelisted);
         } else {
           toggle.textContent = "";
-          toggle.style.display = "none";
-          report.style.display = "none";
+          toggle.hidden = true;
+          report.hidden = true;
         }
 
         if (typeof enableRefreshButton != "undefined") {
-          refresh.style.display = "block";
-          toggle.style.display = "none";
-          report.style.display = "none";
+          refresh.hidden = false;
+          toggle.hidden = true;
+          report.hidden = true;
         }
       }
     );

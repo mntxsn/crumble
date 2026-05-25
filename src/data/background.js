@@ -264,6 +264,21 @@ chrome.runtime.onInstalled.addListener(
   async () => await initialize(true, true)
 );
 
+// Keyboard shortcut: toggle whitelist for the active tab.
+if (chrome.commands && chrome.commands.onCommand) {
+  chrome.commands.onCommand.addListener(async (command) => {
+    if (command !== "toggle-whitelist") return;
+    await initialize();
+    const [activeTab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    if (activeTab && tabList[activeTab.id]) {
+      await toggleWhitelist(tabList[activeTab.id]);
+    }
+  });
+}
+
 // Reporting
 
 function reportWebsite(info, tab, anon, issueType, notes, callback) {

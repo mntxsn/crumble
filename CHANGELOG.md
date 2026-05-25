@@ -40,6 +40,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   evenly placed chocolate chips, and a kept bite mark for character. The
   three crumbs from the original are gone. SVG source lives at
   `src/icons/logo.svg` so the PNGs can be regenerated at any size.
+- **Keyboard shortcut**: `Alt+Shift+C` (rebindable via the browser's
+  shortcut UI) toggles the whitelist for the current tab — same effect as
+  the popup's Disable/Enable button, but doesn't require a click.
+- **Popup accessibility**: the toggle button now exposes its dynamic text
+  to screen readers via `aria-live="polite"`. Hidden buttons use the
+  `hidden` attribute instead of inline `display: none`, so keyboard
+  navigation skips them correctly.
 - **Dark mode**: theme selector in settings with three modes — _Match system_
   (default, follows `prefers-color-scheme`), _Light_, _Dark_. Applied to both
   the popup and the options page.
