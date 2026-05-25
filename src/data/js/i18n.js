@@ -80,7 +80,8 @@ async function fetchLocale(locale) {
 // Apply $PLACEHOLDER$-style substitutions defined in messages.json entries.
 // chrome.i18n.getMessage accepts an array of substitutions positionally — we
 // match that contract so existing callers can pass `hostname` etc. unchanged.
-function applyPlaceholders(message, entry, substitutions) {
+// Exported for testability.
+export function applyPlaceholders(message, entry, substitutions) {
   if (!substitutions || !entry || !entry.placeholders) return message;
   const subsArray = Array.isArray(substitutions)
     ? substitutions

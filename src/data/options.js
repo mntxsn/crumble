@@ -4,6 +4,7 @@ import {
   DEFAULT_LOCALE,
   buildTranslator,
 } from "./js/i18n.js";
+import { parseWhitelistInput } from "./js/utils.js";
 
 const DEFAULT_SETTINGS = {
   whitelistedDomains: {},
@@ -27,23 +28,6 @@ function applyTheme(theme) {
   } else {
     document.documentElement.removeAttribute("data-theme");
   }
-}
-
-function parseWhitelistInput(text) {
-  const domains = {};
-  text.split("\n").forEach((rawLine) => {
-    const line = rawLine
-      .trim()
-      .replace(/^\w*:?\/+/i, "")
-      .replace(/^w{2,3}\d*\./i, "")
-      .split("/")[0]
-      .split(":")[0];
-
-    if (line.length > 0 && line.length < 100) {
-      domains[line] = true;
-    }
-  });
-  return domains;
 }
 
 function getSyncFlag() {

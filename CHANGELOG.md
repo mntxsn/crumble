@@ -43,6 +43,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Dark mode**: theme selector in settings with three modes — _Match system_
   (default, follows `prefers-color-scheme`), _Light_, _Dark_. Applied to both
   the popup and the options page.
+- **Unit tests** for the pure helpers (`isHttpUrl`, `getHostname`,
+  `parseWhitelistInput`, `applyPlaceholders`, locale registry) via Node's
+  built-in test runner. `npm test` is the entry point — 23 tests, no extra
+  dependency.
+- **`src/data/js/utils.js`**: shared pure-helper module imported by both
+  `background.js` and `options.js`. Lets the helpers be unit-tested in
+  plain Node without mocking `chrome.*`.
+- **Consolidated CI workflow** (`.github/workflows/ci.yml`): one Action runs
+  ESLint, Prettier check, and the unit tests on every PR + push to master.
+  Replaces the older `linter.yml` and `prettier.yml` (the latter abused
+  `prettier --write` plus a `git diff` check; the new flow uses the
+  canonical `prettier --check`).
 - **User-selectable language** (`settings.language`, default: English):
   the popup and the options page now load locale messages themselves rather
   than relying on the browser's locale-resolution. The setting offers all 26

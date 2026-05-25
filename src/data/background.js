@@ -1,4 +1,5 @@
 import { commons, commonJSHandlers, rules } from "./rules.js";
+import { isHttpUrl, getHostname } from "./js/utils.js";
 
 // Vars
 let initPromise = null;
@@ -75,24 +76,6 @@ function setSuccessBadge(tabId) {
 
 function setDisabledBadge(tabId) {
   setBadge(tabId, "⛔");
-}
-
-// Common functions
-function isHttpUrl(url) {
-  return (
-    typeof url === "string" &&
-    (url.startsWith("http:") || url.startsWith("https:"))
-  );
-}
-
-function getHostname(url, cleanup) {
-  if (!isHttpUrl(url)) return null;
-  try {
-    const a = new URL(url);
-    return cleanup ? a.hostname.replace(/^w{2,3}\d*\./i, "") : a.hostname;
-  } catch {
-    return null;
-  }
 }
 
 // Whitelisting

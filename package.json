@@ -8,6 +8,8 @@
     "lint": "eslint src .",
     "lintfix": "eslint src --fix",
     "prettier": "prettier --write .",
+    "prettier-check": "prettier --check .",
+    "test": "node --test test/*.test.js",
     "add-rule": "node tools/add-rule.js",
     "generate-block-rules": "node tools/generate-block-rules.js > src/rules.json && prettier --write src/rules.json"
   },
