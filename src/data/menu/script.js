@@ -1,3 +1,43 @@
+import {
+  AVAILABLE_LOCALES,
+  DEFAULT_LOCALE,
+  buildTranslator,
+} from "../js/i18n.js";
+
+const SYNC_FLAG_KEY = "syncSettings";
+
+// Live translator — assigned after the user's preferred locale is loaded.
+// Until then, t() returns the key so untranslated UI shows the message name
+// instead of empty strings (helps diagnosing broken loads).
+let t = (key) => key;
+
+// Read the user's theme + language settings as early as possible so the popup
+// doesn't paint with the wrong colours or English placeholders longer than
+// strictly necessary.
+function readSettings() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get({ [SYNC_FLAG_KEY]: false }, (data) => {
+      const area = data[SYNC_FLAG_KEY]
+        ? chrome.storage.sync
+        : chrome.storage.local;
+      area.get(
+        { settings: { theme: "auto", language: DEFAULT_LOCALE } },
+        ({ settings }) => {
+          resolve(settings || {});
+        }
+      );
+    });
+  });
+}
+
+function applyTheme(theme) {
+  if (theme === "light" || theme === "dark") {
+    document.documentElement.setAttribute("data-theme", theme);
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+}
+
 const toggle = document.getElementById("toggle");
 const refresh = document.getElementById("refresh");
 const report = document.getElementById("report");
@@ -88,7 +128,7 @@ document.getElementById("report_anon_send").addEventListener("click", () => {
       notes: issueTypeValue == "general" ? reportNotesTextarea.value : null,
     },
     (message) => {
-      if (message.error) {
+      if (message && message.error) {
         switchMenu("menu_error");
       } else {
         window.close();
@@ -114,7 +154,7 @@ function reloadMenu(enableRefreshButton) {
         currentTab = message.tab ? message.tab : false;
 
         if (message.tab && message.tab.hostname) {
-          toggle.textContent = chrome.i18n.getMessage(
+          toggle.textContent = t(
             message.tab.whitelisted ? "menuEnable" : "menuDisable",
             message.tab.hostname
           );
@@ -150,12 +190,24 @@ function switchMenu(id) {
 
 function translate() {
   for (const element of document.querySelectorAll("[data-translate]")) {
-    element.textContent = chrome.i18n.getMessage(element.dataset.translate);
+    element.textContent = t(element.dataset.translate);
   }
-
-  reportNotesTextarea.placeholder = chrome.i18n.getMessage(
-    "reportNotesPlaceholder"
-  );
+  reportNotesTextarea.placeholder = t("reportNotesPlaceholder");
 }
 
-reloadMenu();
+async function bootstrap() {
+  const settings = await readSettings();
+  applyTheme(settings.theme || "auto");
+
+  const lang = AVAILABLE_LOCALES.includes(settings.language)
+    ? settings.language
+    : DEFAULT_LOCALE;
+  document.documentElement.lang = lang.replace("_", "-");
+
+  const translator = await buildTranslator(lang);
+  t = translator.t;
+
+  reloadMenu();
+}
+
+bootstrap();

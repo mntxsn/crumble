@@ -21,10 +21,15 @@ const hostname = document.location.hostname.replace(/^w{2,3}\d*\./i, "");
 const item = getItem(hostname);
 
 if (item) {
-  const value = sessionStorage.getItem(item.key);
+  try {
+    const value = sessionStorage.getItem(item.key);
 
-  if (value == null || (item.strict && value != item.value)) {
-    sessionStorage.setItem(item.key, item.value);
-    document.location.reload();
+    if (value == null || (item.strict && value != item.value)) {
+      sessionStorage.setItem(item.key, item.value);
+      document.location.reload();
+    }
+  } catch (err) {
+    // sessionStorage can throw in private/restricted modes or when quota is hit.
+    console.warn("idcac sessionStorage handler failed:", err);
   }
 }

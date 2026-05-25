@@ -30,14 +30,18 @@ const watchChanges = (dir, lastTimestamp) => {
   });
 };
 
-chrome.management.getSelf((self) => {
-  if (self.installType === "development") {
-    chrome.runtime.getPackageDirectoryEntry((dir) => watchChanges(dir));
-    chrome.tabs.query({ active: true, lastFocusedWindow: true }, () => {
-      // NB: see https://github.com/xpl/crx-hotreload/issues/5
-      // if (tabs[0] && !tabs[0].url.startsWith("http://localhost")) {
-      //     chrome.tabs.reload (tabs[0].id)
-      // }
-    });
-  }
-});
+// Dev-only file-watch reload. Requires both `management` permission (for
+// installType detection) and `getPackageDirectoryEntry` (MV2 only). If either
+// is missing, silently no-op instead of throwing on module load.
+if (
+  typeof chrome !== "undefined" &&
+  chrome.management &&
+  typeof chrome.management.getSelf === "function" &&
+  typeof chrome.runtime.getPackageDirectoryEntry === "function"
+) {
+  chrome.management.getSelf((self) => {
+    if (self.installType === "development") {
+      chrome.runtime.getPackageDirectoryEntry((dir) => watchChanges(dir));
+    }
+  });
+}

@@ -512,84 +512,118 @@
   const searchPairsJoinedKeys = searchPairsKeys.join(",");
   let timeoutDuration = 0;
 
-  function searchLoop(counter) {
-    setTimeout(function () {
-      timeoutDuration = 50;
-      document.querySelectorAll(searchPairsJoinedKeys).forEach(function (box) {
-        searchPairsKeys.forEach(function (selector) {
-          if (box.matches(selector)) {
-            (box.shadowRoot || box)
-              .querySelectorAll(searchPairs[selector].join(","))
-              .forEach(function (element) {
-                if (element.click && !element.classList.contains("idcac")) {
-                  element.classList.add("idcac");
+  function doOnePass(counter) {
+    timeoutDuration = 50;
+    document.querySelectorAll(searchPairsJoinedKeys).forEach(function (box) {
+      searchPairsKeys.forEach(function (selector) {
+        if (box.matches(selector)) {
+          (box.shadowRoot || box)
+            .querySelectorAll(searchPairs[selector].join(","))
+            .forEach(function (element) {
+              if (element.click && !element.classList.contains("idcac")) {
+                element.classList.add("idcac");
 
-                  if (typeof chrome == "object" && chrome.runtime) {
-                    chrome.runtime.sendMessage({
-                      command: "cookie_warning_dismissed",
-                      url: document.location.href,
-                    });
-                  }
-
-                  if (element) {
-                    if (element.disabled) {
-                      element.disabled = false;
-                    }
-                    element.click();
-                  }
-                  // The 2nd click is just to be sure. Avoid when a double click breaks the process.
-                  if (selector != ".message-container") {
-                    setTimeout(function () {
-                      if (element) {
-                        if (element.disabled) {
-                          element.disabled = false;
-                        }
-                        element.click();
-                      }
-                    }, 150);
-                  }
-                  console.log("Timeout for element click:", timeoutDuration);
-                  timeoutDuration += 150;
+                if (typeof chrome == "object" && chrome.runtime) {
+                  chrome.runtime.sendMessage({
+                    command: "cookie_warning_dismissed",
+                    url: document.location.href,
+                  });
                 }
-              });
-          }
-        });
-      });
 
-      document
-        .querySelectorAll(searchGroups[counter % searchGroupsLength])
-        .forEach(function (element) {
-          if (element.click && !element.classList.contains("idcac")) {
-            element.classList.add("idcac");
-
-            if (typeof chrome == "object" && chrome.runtime) {
-              chrome.runtime.sendMessage({
-                command: "cookie_warning_dismissed",
-                url: document.location.href,
-              });
-            }
-
-            if (element) {
-              if (element.disabled) {
-                element.disabled = false;
+                if (element) {
+                  if (element.disabled) {
+                    element.disabled = false;
+                  }
+                  element.click();
+                }
+                // The 2nd click is just to be sure. Avoid when a double click breaks the process.
+                if (selector != ".message-container") {
+                  setTimeout(function () {
+                    if (element) {
+                      if (element.disabled) {
+                        element.disabled = false;
+                      }
+                      element.click();
+                    }
+                  }, 150);
+                }
+                timeoutDuration += 150;
               }
+            });
+        }
+      });
+    });
+
+    document
+      .querySelectorAll(searchGroups[counter % searchGroupsLength])
+      .forEach(function (element) {
+        if (element.click && !element.classList.contains("idcac")) {
+          element.classList.add("idcac");
+
+          if (typeof chrome == "object" && chrome.runtime) {
+            chrome.runtime.sendMessage({
+              command: "cookie_warning_dismissed",
+              url: document.location.href,
+            });
+          }
+
+          if (element) {
+            if (element.disabled) {
+              element.disabled = false;
+            }
+            element.click();
+          }
+          setTimeout(function () {
+            if (element && element.id != "disagree-btn") {
               element.click();
             }
-            setTimeout(function () {
-              if (element && element.id != "disagree-btn") {
-                element.click();
-              }
-            }, 300);
+          }, 300);
 
-            console.log("Timeout for element click:", timeoutDuration);
-            timeoutDuration += 100;
-          }
-        });
+          timeoutDuration += 100;
+        }
+      });
+  }
 
+  function searchLoop(counter) {
+    setTimeout(function () {
+      doOnePass(counter);
       if (counter < 100 * searchGroupsLength) {
         searchLoop(counter + 1);
       }
     }, timeoutDuration);
+  }
+
+  // Reactive observer: most banners are late-loaded by async CMP SDKs or
+  // re-injected after SPA route changes. The timed `searchLoop` above runs
+  // for a bounded number of iterations; the observer keeps watching so we
+  // dismiss banners that appear minutes after page load.
+  function installObserver() {
+    if (typeof MutationObserver !== "function" || !document.documentElement) {
+      return;
+    }
+    let observerCounter = 0;
+    let pending = false;
+    const observer = new MutationObserver(function () {
+      if (pending) return;
+      pending = true;
+      // Debounce: coalesce bursts of mutations into one search pass.
+      setTimeout(function () {
+        pending = false;
+        doOnePass(observerCounter++);
+      }, 100);
+    });
+    try {
+      observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
+    } catch {
+      return;
+    }
+    // Bound CPU on stubborn sites that mutate constantly: stop after 60 s.
+    setTimeout(function () {
+      observer.disconnect();
+    }, 60000);
   }
 
   const start = setInterval(function () {
@@ -601,6 +635,7 @@
 
     html.className += " idc0_343";
     searchLoop(0);
+    installObserver();
     clearInterval(start);
   }, 250);
 })();

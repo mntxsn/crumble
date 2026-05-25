@@ -1,12 +1,10 @@
 <div align="center">
 
-<img src="src/icons/128.png" />
-  
+<img src="src/icons/128.png" alt="" />
+
 # I still don't care about cookies
 
-### Debloated fork of the extension "I don't care about cookies"
-
-#### Get rid of cookie warnings from almost all websites!
+### Get rid of cookie warnings on almost every website.
 
 <a href="https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/OhMyGuus/I-Still-Dont-Care-About-Cookies.svg?logo=github&style=for-the-badge"></a>
 <a href="https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/releases"><img alt="Releases" src="https://img.shields.io/github/downloads/OhMyGuus/I-Still-Dont-Care-About-Cookies/total?color=blue&label=downloads&style=for-the-badge"></a>
@@ -14,46 +12,95 @@
 
 </div>
 
-## Why fork?
+## What it does
 
-This extension has been acquired by _**[Avast](https://en.wikipedia.org/wiki/Avast)**_ (which itself has been acquired by _[Gen Digital Inc.](https://en.wikipedia.org/wiki/Gen_Digital)_, a large tech conglomerate) and I simply don't trust Avast with my data. Additionally, having it on GitHub allows us to improve the code and add support for websites faster.
+Cookie consent prompts have become unavoidable, intrusive, and rarely actually about your privacy. This extension takes them off your screen:
 
-## Download & Install
+- **Hides or auto-dismisses** cookie banners on thousands of sites.
+- **Sets stored consent flags** so banners don't reappear when you come back.
+- **Talks directly to the major Consent Management Platforms** (OneTrust, Cookiebot, Didomi, TrustArc, Quantcast Choice) via their published JS APIs — more reliable than clicking through DOM selectors.
+- **Blocks known third-party consent SDKs** at the network layer where it's safe to do so.
 
-<a href="https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt='Get the Extension on Firefox' height="75"></a>
-<a href="https://chrome.google.com/webstore/detail/i-still-dont-care-about-c/edibdbjcniadpccecjdfdjjppcpchdlm"><img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="Get the Extension on Chrome" height="75" style="border: 1px solid transparent; border-radius:6px;"></a>
-<a href="https://microsoftedge.microsoft.com/addons/detail/i-still-dont-care-about-/kkacdgacpkediooahopgcbdahlpipheh"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Get_it_from_Microsoft_Badge.svg/320px-Get_it_from_Microsoft_Badge.svg.png" alt="Get the Extension on Edge" height="75" style="border: 1px solid transparent; border-radius:4px;"></a>
+No account, no tracking, no telemetry.
 
-## Manual installation
+## Install
 
-- [Installation guide for **Firefox**](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/wiki/Firefox-installation-guide)
-- [Installation guide for **Chrome**](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/wiki/Chrome-installation-guide)
+<a href="https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get for Firefox" height="65"></a>
+<a href="https://chrome.google.com/webstore/detail/i-still-dont-care-about-c/edibdbjcniadpccecjdfdjjppcpchdlm"><img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="Get for Chrome" height="65"></a>
+<a href="https://microsoftedge.microsoft.com/addons/detail/i-still-dont-care-about-/kkacdgacpkediooahopgcbdahlpipheh"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Get_it_from_Microsoft_Badge.svg/320px-Get_it_from_Microsoft_Badge.svg.png" alt="Get for Edge" height="65"></a>
 
-## Contributing to Translation
+Manual install guides: [Firefox](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/wiki/Firefox-installation-guide) · [Chrome](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/wiki/Chrome-installation-guide).
 
-We welcome contributions to the translation of the extension. If you're interested in helping us translate the extension to your language, you can join us on [Crowdin](https://crowdin.com/project/i-still-dont-care-about-cookie/).
+## Features
 
-## Contributing to The API
+- **Per-domain whitelist** — disable the extension on individual sites via the toolbar popup
+- **Backup** — download or restore your whitelist as JSON from the options page
+- **Sync** (opt-in) — mirror your whitelist across devices via browser sync
+- **Debug mode** (opt-in) — see which rule fired on the current site in the background console
+- **Status badges** — green check (✅) when the extension acted, grey ⛔ when whitelisted
 
-This extension sends requests to an API hosted at _[api.istilldontcareaboutcookies.com](https://api.istilldontcareaboutcookies.com)_ - while this is a backend-facing piece of software, the source code is available [here on GitHub](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies-Api) and uses the C# ASP.NET library for an MVC structure.
+## When a site still shows a banner
+
+1. Make sure no other privacy or ad-blocker extension is interfering.
+2. Try the page in a clean profile — broken sites are sometimes broken by unrelated extensions.
+3. If it really is us, use the **Report** button in the popup:
+   - **GitHub** opens a pre-filled issue template.
+   - **Anonymous** sends a short report to our API (no personal data).
+
+## Development
+
+```bash
+git clone https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies.git
+cd I-Still-Dont-Care-About-Cookies
+npm install
+```
+
+The repo ships two manifests for the two major browser families. The build step copies the right one to `src/manifest.json` — to load the extension as an unpacked add-on locally:
+
+```bash
+# Firefox
+cp src/manifest_v2.json src/manifest.json
+
+# Chrome / Edge / Chromium-derived
+cp src/manifest_v3.json src/manifest.json
+```
+
+Then load `src/` as a temporary extension (`about:debugging` in Firefox, `chrome://extensions` in Chromium browsers).
+
+### Adding a rule for a new site
+
+```bash
+npm run add-rule -- --domain example.com --css "#cookie-banner { display: none }"
+```
+
+The tool edits `src/data/rules.js` in place. See [tools/README.md](tools/README.md) for the full flag list (custom CSS, common-CSS reference, handler reference).
+
+### Other scripts
+
+```bash
+npm run lint                  # ESLint
+npm run prettier              # Format the tree
+npm run generate-block-rules  # Regenerate src/rules.json from rules.js (MV3 DNR)
+```
+
+## Translation
+
+We use [Crowdin](https://crowdin.com/project/i-still-dont-care-about-cookie/) for translations. Pull requests against individual `src/_locales/<lang>/messages.json` files are also fine.
 
 ## License
 
-This fork is based on [**v3.4.3**](https://addons.mozilla.org/firefox/addon/i-dont-care-about-cookies/versions/) of the extension, which has been distributed under the GPLv3 (GNU) license.
+GPL-3.0 — see [LICENSE](LICENSE).
 
-## Credits / spotlights
+## Credits
 
-- [OhMyGuus](https://github.com/OhMyGuus/) - Current maintainer of this
-- [appeasementPolitik](https://github.com/appeasementPolitik) - Helped a lot with setting up and maintaining the project. (Thanks!)
-- [Translators](https://crowdin.com/project/i-still-dont-care-about-cookie/members) - Awesome people who translated (Thanks!)
-- [All other contributors](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/graphs/contributors) (Thanks!)
-- [Daniel Kladnik](https://www.linkedin.com/in/dkladnik) - Developer of original extension
-- Everyone who reported a website.
+This project began as a fork of Daniel Kladnik's _I don't care about cookies_ (v3.4.3, GPL-3.0) and is now maintained independently. The rule set and core architecture descend from years of patient cataloguing in the original project — Daniel and the original contributors deserve credit for that work.
 
-## Thanks to all contributors
-
-We would like to extend our gratitude to all the contributors, translators, and everyone who has helped make this extension possible. Your efforts and support are highly appreciated, and we could not have done it without you. Thank you!
+- Original author: [Daniel Kladnik](https://www.linkedin.com/in/dkladnik)
+- Maintainer: [OhMyGuus](https://github.com/OhMyGuus/)
+- Project setup help: [appeasementPolitik](https://github.com/appeasementPolitik)
+- [All contributors](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/graphs/contributors)
+- [Translators](https://crowdin.com/project/i-still-dont-care-about-cookie/members)
 
 <a href="https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/graphs/contributors">
-  <img alt="List of contributors to this repository" src="https://contrib.rocks/image?repo=OhMyGuus/I-Still-Dont-Care-About-Cookies" />
+  <img alt="Contributors" src="https://contrib.rocks/image?repo=OhMyGuus/I-Still-Dont-Care-About-Cookies" />
 </a>

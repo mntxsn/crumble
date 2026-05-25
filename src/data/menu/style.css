@@ -1,62 +1,144 @@
+/* Popup-specific styles. Design tokens live in ../css/theme.css. */
+
 body {
-  -moz-user-select: none;
   user-select: none;
-  font:
-    14px/18px Arial,
-    Helvetica,
-    sans-serif;
-  background: #e8e8e8;
-  padding: 0;
-  margin: 0;
+  width: 280px;
 }
 
-a[id] {
+.popup {
+  padding: var(--space-3);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.header img {
+  width: 24px;
+  height: 24px;
   display: block;
-  cursor: pointer;
-  text-decoration: none;
-  color: #000;
-  padding: 4px;
-  border-top: 1px dashed #888;
 }
-a[id]:hover {
-  background-color: #ccc;
-}
-#toggle,
-#report {
-  display: none;
-}
-#refresh {
-  display: none;
-  text-align: center;
-  font-size: 200%;
-  padding: 10px;
-  font-weight: bold;
-  color: #cc4223;
+
+.header .brand {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.2;
+  flex: 1;
 }
 
 .menu {
-  text-align: left;
-  padding: 10px 0;
-  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .menu-hidden {
   display: none !important;
 }
 
-h3 {
-  margin-top: 0px;
+.menu button,
+.menu a[id] {
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
 }
 
-#report_issue_type,
-label[id*="issue_description"] {
-  margin-bottom: 5px;
+.menu button:hover,
+.menu a[id]:hover {
+  background: var(--surface-hover);
+}
+
+.menu button:focus-visible,
+.menu a[id]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+#toggle,
+#report,
+#refresh {
+  display: none;
+}
+
+#toggle {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+  font-weight: 500;
+}
+
+#toggle:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+#refresh {
+  background: var(--warning);
+  color: var(--accent-fg);
+  border-color: var(--warning);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1;
+  padding: var(--space-3);
+}
+
+#refresh:hover {
+  background: var(--warning-hover);
+  border-color: var(--warning-hover);
+}
+
+.menu .row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.menu .row button,
+.menu .row a[id] {
+  flex: 1;
+}
+
+/* Report (anonymous) form */
+.menu h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+  color: var(--text);
+}
+
+.menu h3 #hostname {
+  font-weight: 400;
+  color: var(--text-muted);
+  display: block;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+#report_issue_type {
+  width: 100%;
+  margin-bottom: var(--space-2);
 }
 
 label[id*="issue_description"] {
-  color: rgb(43, 43, 43);
+  font-size: 12px;
+  color: var(--text-muted);
   font-style: italic;
   display: none;
+  margin-bottom: var(--space-2);
 }
 
 label#general_issue_description {
@@ -64,8 +146,45 @@ label#general_issue_description {
 }
 
 #report-notes {
-  height: 70px;
-  min-width: 100%;
-  max-width: 100%;
-  margin-bottom: 5px;
+  width: 100%;
+  min-height: 70px;
+  margin-bottom: var(--space-2);
+}
+
+/* Loading + error screens */
+#menu_loading,
+#menu_error {
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+}
+
+#menu_loading p,
+#menu_error p {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+#menu_loading h2,
+#menu_error h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+}
+
+/* CSS-only spinner — themeable via currentColor */
+.spinner {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto var(--space-3);
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: idcac-spin 0.8s linear infinite;
+}
+
+@keyframes idcac-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -2,9 +2,8 @@
 /*  Handler is used to remove the cookie warning for certain embeds  */
 
 (function () {
-  const classname = Math.random()
-    .toString(36)
-    .replace(/[^a-z]+/g, "");
+  const classname =
+    Math.random().toString(36).replace(/[^a-z]+/g, "") || "idcac";
 
   const l = document.location;
   let isAudioboom = false;

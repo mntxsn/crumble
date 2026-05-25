@@ -88,9 +88,99 @@
     "description": "Option text for enabling the status indicator"
   },
 
+  "optionDebug": {
+    "message": "Debug logging (console)",
+    "description": "Option text for enabling debug logging in the background console."
+  },
+
+  "optionSync": {
+    "message": "Sync settings across devices",
+    "description": "Option text for enabling browser-sync of settings."
+  },
+
+  "optionTheme": {
+    "message": "Theme",
+    "description": "Label for the theme selector (auto/light/dark)."
+  },
+
+  "optionLanguage": {
+    "message": "Language",
+    "description": "Label for the language selector in the options page."
+  },
+
+  "optionLanguageHint": {
+    "message": "Choose the language used by the popup and this options page. The extension defaults to English; pick a different language at any time.",
+    "description": "Helper text below the language selector."
+  },
+
+  "optionThemeAuto": {
+    "message": "Match system",
+    "description": "Theme option: follow the operating system preference."
+  },
+
+  "optionThemeLight": {
+    "message": "Light",
+    "description": "Theme option: always light."
+  },
+
+  "optionThemeDark": {
+    "message": "Dark",
+    "description": "Theme option: always dark."
+  },
+
+  "optionsGeneralSection": {
+    "message": "General",
+    "description": "Section heading for the general settings card."
+  },
+
+  "optionsWhitelistSection": {
+    "message": "Whitelist",
+    "description": "Section heading for the whitelist card."
+  },
+
+  "optionsWhitelistHint": {
+    "message": "Each line is one domain. Subdomains and www-prefixes are normalised on save.",
+    "description": "Helper text below the whitelist textarea."
+  },
+
+  "optionsBackupHint": {
+    "message": "Download your whitelist and settings as a JSON file, or restore from a previous backup.",
+    "description": "Helper text below the backup heading."
+  },
+
   "optionsButton": {
     "message": "Save settings",
     "description": "Options text for SAVE button."
+  },
+
+  "optionsBackupSection": {
+    "message": "Backup",
+    "description": "Section heading for the backup/export feature."
+  },
+
+  "optionsExport": {
+    "message": "Download backup",
+    "description": "Button text to export settings as JSON file."
+  },
+
+  "optionsImport": {
+    "message": "Restore from backup…",
+    "description": "Button text to import settings from JSON file."
+  },
+
+  "optionsImportSuccess": {
+    "message": "Backup restored.",
+    "description": "Status text after a successful import."
+  },
+
+  "optionsImportError": {
+    "message": "Could not read backup file.",
+    "description": "Status text after a failed import."
+  },
+
+  "optionsSaved": {
+    "message": "Saved.",
+    "description": "Status text after settings were saved."
   },
 
   "reportGithub": {

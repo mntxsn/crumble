@@ -869,7 +869,11 @@ if (cookies) {
         }
       }
 
-      document.cookie = cookie[0] + "=" + cookie[1];
+      document.cookie =
+        cookie[0] +
+        "=" +
+        cookie[1] +
+        "; path=/; max-age=31536000; SameSite=Lax";
       counter++;
     }
   });

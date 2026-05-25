@@ -1,26 +1,78 @@
 import { blockUrls, commons, commonJSHandlers, rules } from "./rules.js";
 // Vars
-let initialized = false;
+let initPromise = null;
 let cachedRules = {};
 let tabList = {};
 const xmlTabs = {};
 let lastDeclarativeNetRuleId = 1;
-let settings = { statusIndicators: true, whitelistedDomains: {} };
+let settings = {
+  statusIndicators: true,
+  whitelistedDomains: {},
+  debug: false,
+};
 const isManifestV3 = chrome.runtime.getManifest().manifest_version == 3;
+
+const SYNC_FLAG_KEY = "syncSettings";
+const DEFAULT_SETTINGS = {
+  whitelistedDomains: {},
+  statusIndicators: true,
+  debug: false,
+};
+
+function debugLog(...args) {
+  if (settings.debug) console.log("[idcac]", ...args);
+}
+
+function getSyncFlag() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get({ [SYNC_FLAG_KEY]: false }, (data) => {
+      resolve(Boolean(data[SYNC_FLAG_KEY]));
+    });
+  });
+}
+
+async function loadSettingsFromStorage() {
+  const useSync = await getSyncFlag();
+  const area = useSync ? chrome.storage.sync : chrome.storage.local;
+  return new Promise((resolve) => {
+    area.get({ settings: DEFAULT_SETTINGS }, ({ settings: stored }) => {
+      if (chrome.runtime.lastError) {
+        // sync may be unavailable (offline, throttled) — fall back to local.
+        console.warn(
+          "Settings read from",
+          useSync ? "sync" : "local",
+          "failed:",
+          chrome.runtime.lastError
+        );
+        chrome.storage.local.get(
+          { settings: DEFAULT_SETTINGS },
+          ({ settings: fallback }) => {
+            resolve({ ...DEFAULT_SETTINGS, ...fallback });
+          }
+        );
+        return;
+      }
+      resolve({ ...DEFAULT_SETTINGS, ...stored });
+    });
+  });
+}
 
 // Badges
 function setBadge(tabId, text) {
   const chromeAction = chrome?.browserAction ?? chrome?.action;
 
   if (!chromeAction || !settings.statusIndicators) return;
+  if (typeof tabId !== "number" || tabId < 0) return;
 
-  chromeAction.setBadgeText({ text: text || "", tabId: tabId });
+  try {
+    chromeAction.setBadgeText({ text: text || "", tabId });
 
-  if (chromeAction.setBadgeBackgroundColor)
-    chromeAction.setBadgeBackgroundColor({
-      color: "#646464",
-      tabId: tabId,
-    });
+    if (chromeAction.setBadgeBackgroundColor) {
+      chromeAction.setBadgeBackgroundColor({ color: "#646464", tabId });
+    }
+  } catch {
+    // Tab may have been closed between the lookup and the badge call.
+  }
 }
 
 function setSuccessBadge(tabId) {
@@ -32,38 +84,38 @@ function setDisabledBadge(tabId) {
 }
 
 // Common functions
+function isHttpUrl(url) {
+  return (
+    typeof url === "string" &&
+    (url.startsWith("http:") || url.startsWith("https:"))
+  );
+}
+
 function getHostname(url, cleanup) {
+  if (!isHttpUrl(url)) return null;
   try {
-    if (url.indexOf("http") != 0) {
-      throw true;
-    }
-
     const a = new URL(url);
-
-    return typeof cleanup == "undefined"
-      ? a.hostname
-      : a.hostname.replace(/^w{2,3}\d*\./i, "");
+    return cleanup
+      ? a.hostname.replace(/^w{2,3}\d*\./i, "")
+      : a.hostname;
   } catch {
-    return false;
+    return null;
   }
 }
 
 // Whitelisting
-function updateSettings() {
-  return new Promise((resolve) => {
-    lastDeclarativeNetRuleId = 1;
-    chrome.storage.local.get(
-      { settings: { whitelistedDomains: {}, statusIndicators: true } },
-      async ({ settings: storedSettings }) => {
-        settings = storedSettings;
-
-        if (isManifestV3) {
-          await updateWhitelistRules();
-        }
-        resolve();
-      }
-    );
+async function updateSettings() {
+  lastDeclarativeNetRuleId = 1;
+  settings = await loadSettingsFromStorage();
+  debugLog("settings reloaded", {
+    whitelisted: Object.keys(settings.whitelistedDomains).length,
+    statusIndicators: settings.statusIndicators,
+    debug: settings.debug,
   });
+
+  if (isManifestV3) {
+    await updateWhitelistRules();
+  }
 }
 
 async function updateWhitelistRules() {
@@ -91,7 +143,7 @@ async function updateWhitelistRules() {
       };
     });
 
-  chrome.declarativeNetRequest.updateDynamicRules({
+  await chrome.declarativeNetRequest.updateDynamicRules({
     addRules,
     removeRuleIds: previousRules,
   });
@@ -125,24 +177,48 @@ function getWhitelistedDomain(tab) {
   return false;
 }
 
+async function persistSettings() {
+  await new Promise((resolve) =>
+    chrome.storage.local.set({ settings }, resolve)
+  );
+  if (await getSyncFlag()) {
+    try {
+      await new Promise((resolve, reject) => {
+        chrome.storage.sync.set({ settings }, () => {
+          if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+          else resolve();
+        });
+      });
+    } catch (err) {
+      console.warn("Settings sync write failed:", err);
+    }
+  }
+}
+
 async function toggleWhitelist(tab) {
-  if (tab.url.indexOf("http") != 0 || !tabList[tab.id]) {
+  if (!isHttpUrl(tab.url) || !tabList[tab.id]) {
     return;
   }
 
-  if (tabList[tab.id].whitelisted) {
-    // const hostname = getWhitelistedDomain(tabList[tab.id]);
+  const previousState = tabList[tab.id].whitelisted;
+  if (previousState) {
     delete settings.whitelistedDomains[tabList[tab.id].hostname];
   } else {
     settings.whitelistedDomains[tabList[tab.id].hostname] = true;
   }
-  chrome.storage.local.set({ settings }, function () {
-    for (const i in tabList) {
-      if (tabList[i].hostname == tabList[tab.id].hostname) {
-        tabList[i].whitelisted = !tabList[tab.id].whitelisted;
-      }
+
+  debugLog(
+    previousState ? "unwhitelist" : "whitelist",
+    tabList[tab.id].hostname
+  );
+
+  await persistSettings();
+
+  for (const i in tabList) {
+    if (tabList[i].hostname == tabList[tab.id].hostname) {
+      tabList[i].whitelisted = !previousState;
     }
-  });
+  }
   if (isManifestV3) {
     await updateWhitelistRules();
   }
@@ -151,7 +227,7 @@ async function toggleWhitelist(tab) {
 // Maintain tab list
 
 function getPreparedTab(tab) {
-  tab.hostname = false;
+  tab.hostname = null;
   tab.whitelisted = false;
   tab.host_levels = [];
 
@@ -177,19 +253,17 @@ function onCreatedListener(tab) {
 }
 
 function onUpdatedListener(tabId, changeInfo, tab) {
-  if (changeInfo.status) {
+  if (changeInfo.status || changeInfo.url) {
     tabList[tab.id] = getPreparedTab(tab);
   }
 }
 
 function onRemovedListener(tabId) {
-  if (tabList[tabId]) {
-    delete tabList[tabId];
-  }
+  delete tabList[tabId];
+  delete xmlTabs[tabId];
 }
 
 async function recreateTabList(magic) {
-  tabList = {};
   let results;
   if (isManifestV3) {
     results = await chrome.tabs.query({});
@@ -197,17 +271,23 @@ async function recreateTabList(magic) {
     results = await new Promise((resolve, reject) => {
       chrome.tabs.query({}, (result) => {
         if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
-        resolve(result);
+        else resolve(result);
       });
     });
   }
-  results.forEach(onCreatedListener);
+
+  // Build the new list off to the side, then swap in one assignment. Prevents
+  // any concurrent reader (e.g. MV2 synchronous webRequest) from seeing an
+  // empty map mid-rebuild.
+  const newTabList = {};
+  for (const tab of results) {
+    newTabList[tab.id] = getPreparedTab(tab);
+  }
+  tabList = newTabList;
 
   if (magic) {
-    for (const i in tabList) {
-      if (Object.prototype.hasOwnProperty.call(tabList, i)) {
-        doTheMagic(tabList[i].id);
-      }
+    for (const id in tabList) {
+      doTheMagic(tabList[id].id);
     }
   }
 }
@@ -216,9 +296,22 @@ chrome.tabs.onCreated.addListener(onCreatedListener);
 chrome.tabs.onUpdated.addListener(onUpdatedListener);
 chrome.tabs.onRemoved.addListener(onRemovedListener);
 
+// Sync in-memory settings when storage is mutated externally. Triggers on:
+// - local writes from the options page or `toggleWhitelist`
+// - sync writes from another device (when sync is enabled)
+// - the user toggling the sync flag itself.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (
+    (area === "local" && (changes.settings || changes[SYNC_FLAG_KEY])) ||
+    (area === "sync" && changes.settings)
+  ) {
+    updateSettings();
+  }
+});
+
 // chrome.runtime.onStartup.addListener(async () => await initialize(true));
 chrome.runtime.onInstalled.addListener(
-  async () => await initialize(false, true)
+  async () => await initialize(true, true)
 );
 
 // URL blocking
@@ -228,9 +321,9 @@ function blockUrlCallback(d) {
   // TODO: parse rules.json for this function.
 
   if (d.tabId == -1 && d.initiator) {
-    // const hostname = getHostname(d.initiator, true);
+    const initiatorHostname = getHostname(d.initiator, true);
     for (const tabId in tabList) {
-      if (tabList[tabId].hostname == getHostname(d.initiator, true)) {
+      if (tabList[tabId].hostname == initiatorHostname) {
         d.tabId = parseInt(tabId);
         break;
       }
@@ -310,10 +403,11 @@ function blockUrlCallback(d) {
     if (d.tabId > -1 && tabList[d.tabId].host_levels.length > 0) {
       for (const level in tabList[d.tabId].host_levels) {
         if (blockUrls.specific[tabList[d.tabId].host_levels[level]]) {
-          const rules = blockUrls.specific[tabList[d.tabId].host_levels[level]];
+          const specificRules =
+            blockUrls.specific[tabList[d.tabId].host_levels[level]];
 
-          for (const i in rules) {
-            if (d.url.indexOf(rules[i]) > -1) {
+          for (const i in specificRules) {
+            if (d.url.indexOf(specificRules[i]) > -1) {
               setSuccessBadge(d.tabId);
               return { cancel: true };
             }
@@ -354,38 +448,51 @@ if (!isManifestV3) {
 // Reporting
 
 function reportWebsite(info, tab, anon, issueType, notes, callback) {
-  if (tab.url.indexOf("http") != 0 || !tabList[tab.id]) {
+  const respond = (payload) => {
+    if (typeof callback === "function") callback(payload);
+  };
+
+  if (!isHttpUrl(tab.url) || !tabList[tab.id]) {
+    respond({ error: true });
     return;
   }
 
   const hostname = getHostname(tab.url);
 
-  if (hostname.length == 0) {
+  if (!hostname) {
+    respond({ error: true });
     return;
   }
 
   if (tabList[tab.id].whitelisted) {
-    return chrome.notifications.create("report", {
+    chrome.notifications.create("report", {
       type: "basic",
       title: chrome.i18n.getMessage("reportSkippedTitle", hostname),
       message: chrome.i18n.getMessage("reportSkippedMessage"),
       iconUrl: "icons/48.png",
     });
+    respond({ error: false });
+    return;
   }
   if (!anon) {
     chrome.tabs.create({
-      url: `https://github.com/OhMyGuus/I-Dont-Care-About-Cookies/issues/new?assignees=OhMyGuus&labels=Website+request&template=website_request.yml&title=%5BREQ%5D%3A+${encodeURIComponent(
+      url: `https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/issues/new?assignees=OhMyGuus&labels=Website+request&template=website_request.yml&title=%5BREQ%5D%3A+${encodeURIComponent(
         hostname
       )}&url=${encodeURIComponent(hostname)}&version=${encodeURIComponent(
         chrome.runtime.getManifest().version
       )}&browser=${encodeURIComponent(getBrowserAndVersion())}`,
     });
+    respond({ error: false });
   } else {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     fetch("https://api.istilldontcareaboutcookies.com/api/report", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      signal: controller.signal,
       body: JSON.stringify({
         issueType,
         notes,
@@ -396,7 +503,12 @@ function reportWebsite(info, tab, anon, issueType, notes, callback) {
         extensionVersion: chrome.runtime.getManifest().version,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return response.json();
+      })
       .then((response) => {
         if (
           response &&
@@ -407,24 +519,28 @@ function reportWebsite(info, tab, anon, issueType, notes, callback) {
           chrome.tabs.create({
             url: response.responseURL,
           });
-          callback({ error: false });
+          respond({ error: false });
         } else {
-          callback({ error: true });
+          respond({ error: true });
         }
       })
-      .catch(() => {
-        callback({ error: true });
-      });
+      .catch((err) => {
+        console.error("Report submission failed:", err);
+        respond({ error: true });
+      })
+      .finally(() => clearTimeout(timeoutId));
   }
 }
 
 function getBrowserAndVersion() {
   const useragent = navigator.userAgent;
   if (useragent.includes("Firefox")) {
-    return useragent.match(/Firefox\/([0-9]+[\S]+)/)[0].replace("/", " ");
+    const match = useragent.match(/Firefox\/([0-9]+[\S]+)/);
+    if (match) return match[0].replace("/", " ");
   } else if (useragent.includes("Chrome")) {
-    if (navigator.userAgentData.brands.length > 2) {
-      const { brand, version } = navigator.userAgentData.brands[1];
+    const brands = navigator.userAgentData?.brands;
+    if (brands && brands.length > 2 && brands[1]) {
+      const { brand, version } = brands[1];
       return brand + " " + version;
     }
   }
@@ -434,16 +550,18 @@ function getBrowserAndVersion() {
 // Adding custom CSS/JS
 
 function activateDomain(hostname, tabId, frameId) {
-  if (!cachedRules[hostname]) {
-    cachedRules[hostname] = rules[hostname] || {};
-  }
-
-  if (!cachedRules[hostname]) {
-    return false;
+  if (!(hostname in cachedRules)) {
+    cachedRules[hostname] = rules[hostname] || null;
   }
 
   const cachedRule = cachedRules[hostname];
+
+  if (!cachedRule) {
+    return false;
+  }
+
   let status = false;
+  const matched = [];
 
   // cached_rule.s = Custom css for webpage
   // cached_rule.c = Common css for webpage
@@ -452,11 +570,13 @@ function activateDomain(hostname, tabId, frameId) {
   if (typeof cachedRule.s != "undefined") {
     insertCSS({ tabId, frameId: frameId || 0, css: cachedRule.s });
     status = true;
+    matched.push("custom-css");
   }
 
   if (typeof cachedRule.c != "undefined") {
     insertCSS({ tabId, frameId: frameId || 0, css: commons[cachedRule.c] });
     status = true;
+    matched.push(`common-css#${cachedRule.c}`);
   }
 
   if (typeof cachedRule.j != "undefined") {
@@ -466,17 +586,19 @@ function activateDomain(hostname, tabId, frameId) {
       file: `/data/js/${commonJSHandlers[cachedRule.j]}.js`,
     });
     status = true;
+    matched.push(`handler#${commonJSHandlers[cachedRule.j]}`);
   }
 
   if (status) {
     setSuccessBadge(tabId);
+    debugLog("rule fired", { host: hostname, tabId, matched });
   }
 
   return status;
 }
 
 function doTheMagic(tabId, frameId, anotherTry) {
-  if (!tabList[tabId] || tabList[tabId].url.indexOf("http") != 0) {
+  if (!tabList[tabId] || !isHttpUrl(tabList[tabId].url)) {
     return;
   }
 
@@ -506,6 +628,10 @@ function doTheMagic(tabId, frameId, anotherTry) {
         return;
       }
 
+      // Try CMP APIs first — most reliable when the site uses a known
+      // Consent Management Platform.
+      executeScript({ tabId, frameId, file: "/data/js/tcfHandler.js" });
+
       // Common social embeds
       executeScript({ tabId, frameId, file: "/data/js/embedsHandler.js" });
 
@@ -522,6 +648,10 @@ function doTheMagic(tabId, frameId, anotherTry) {
       }
 
       // Common JS rules when custom rules don't exist
+      debugLog("fallback to defaultClickHandler", {
+        host: tabList[tabId].hostname,
+        tabId,
+      });
       executeScript({
         tabId,
         frameId,
@@ -535,9 +665,7 @@ chrome.webNavigation.onCommitted.addListener(async (tab) => {
   if (tab.frameId > 0) {
     return;
   }
-  if (!initialized) {
-    await initialize();
-  }
+  await initialize();
 
   tabList[tab.tabId] = getPreparedTab(tab);
 
@@ -545,12 +673,21 @@ chrome.webNavigation.onCommitted.addListener(async (tab) => {
 });
 
 chrome.webNavigation.onCompleted.addListener(async function (tab) {
-  if (!initialized) {
-    await initialize();
-  }
+  await initialize();
   if (tab.frameId > 0 && tab.url != "about:blank") {
     doTheMagic(tab.tabId, tab.frameId);
   }
+});
+
+// SPA route changes (Reddit, X, YouTube, etc.) don't fire onCommitted/onCompleted
+// for the top frame. Keep tabList fresh so block decisions and whitelisting use
+// the new hostname. We don't re-run doTheMagic — the content script's
+// MutationObserver handles late banner injections on the same page.
+chrome.webNavigation.onHistoryStateUpdated.addListener(async (tab) => {
+  if (tab.frameId > 0) return;
+  await initialize();
+  tabList[tab.tabId] = getPreparedTab(tab);
+  debugLog("history-state updated", { host: tabList[tab.tabId].hostname });
 });
 
 // Toolbar menu
@@ -583,18 +720,22 @@ chrome.runtime.onMessage.addListener((request, info, sendResponse) => {
           );
           responseSend = true;
         } else if (request.command == "refresh_page") {
-          executeScript({
-            tabId: request.tabId,
-            func: () => {
-              window.location.reload();
-            },
-          });
+          chrome.tabs.reload(request.tabId);
         }
       } else {
         if (request.command == "open_options_page") {
           chrome.tabs.create({
             url: chrome.runtime.getURL("/data/options.html"),
           });
+        } else if (request.command == "cmp_dismissed" && info.tab) {
+          // tcfHandler reports CMP API dismissals — surface them via badge so
+          // the user sees the extension acted even when no DOM click fired.
+          debugLog("cmp dismissed via API", {
+            cmp: request.cmp,
+            tabId: info.tab.id,
+            url: request.url,
+          });
+          setSuccessBadge(info.tab.id);
         }
       }
     } else if (request == "update_settings") {
@@ -668,14 +809,23 @@ async function loadCachedRules() {
   cachedRules = {};
 }
 
-async function initialize(checkInitialized, magic) {
-  if (checkInitialized && initialized) {
-    return;
-  }
-  loadCachedRules();
-  await updateSettings();
-  await recreateTabList(magic);
-  initialized = true;
+function initialize(force, magic) {
+  // Dedup concurrent callers so we never run recreateTabList in parallel.
+  // `force` bypasses the cache (used on install to guarantee a fresh start).
+  if (initPromise && !force) return initPromise;
+
+  initPromise = (async () => {
+    loadCachedRules();
+    await updateSettings();
+    await recreateTabList(magic);
+  })();
+
+  // On failure, clear so the next caller can retry from scratch.
+  initPromise.catch(() => {
+    initPromise = null;
+  });
+
+  return initPromise;
 }
 
-initialize();
+initialize().catch((err) => console.error("Initialization failed:", err));

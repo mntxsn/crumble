@@ -3,22 +3,36 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div style="width: 220px; padding: 10px 10px 0; text-align: center">
-      <img src="../../icons/32.png" />
+    <div class="popup">
+      <header class="header">
+        <img src="../../icons/32.png" alt="" />
+        <span class="brand" data-translate="extensionName"></span>
+      </header>
 
       <div id="menu_main" class="menu">
-        <a id="toggle"></a>
-        <a id="refresh">&#x21bb;</a>
-        <a id="report" data-translate="menuReport"></a>
-        <a id="options" data-translate="optionsTitle"></a>
+        <button type="button" id="toggle"></button>
+        <button type="button" id="refresh" aria-label="Reload page">&#x21bb;</button>
+        <div class="row">
+          <button type="button" id="report" data-translate="menuReport"></button>
+          <button type="button" id="options" data-translate="optionsTitle"></button>
+        </div>
       </div>
 
       <div id="menu_report" class="menu menu-hidden">
-        <a id="report_github" data-translate="reportGithub"></a>
-        <a id="report_anon" data-translate="reportAnon"></a>
+        <button
+          type="button"
+          id="report_github"
+          data-translate="reportGithub"
+        ></button>
+        <button
+          type="button"
+          id="report_anon"
+          data-translate="reportAnon"
+        ></button>
       </div>
 
       <div id="menu_report_anon" class="menu menu-hidden">
@@ -47,33 +61,35 @@
           data-translate="modalIssueDescription"
         ></label>
         <textarea id="report-notes"></textarea>
-        <button id="report_anon_send" data-translate="reportAnonSend"></button>
         <button
+          type="button"
+          id="report_anon_send"
+          class="btn-primary"
+          data-translate="reportAnonSend"
+        ></button>
+        <button
+          type="button"
           id="report_anon_cancel"
           data-translate="reportAnonCancel"
         ></button>
       </div>
-    </div>
 
-    <div id="menu_error" class="menu menu-hidden">
-      <div style="text-align: center">
+      <div id="menu_error" class="menu menu-hidden">
         <h2 data-translate="genericErrorTitle"></h2>
         <p data-translate="genericErrorTryAgain"></p>
-        <a
+        <button
+          type="button"
           id="error_back_button"
           data-translate="genericErrorBack"
-          class="menu-item"
-        ></a>
+        ></button>
       </div>
-    </div>
 
-    <div id="menu_loading" class="menu menu-hidden">
-      <div style="text-align: center">
-        <img src="spinner.svg" width="60" fill="#fff" alt="" />
+      <div id="menu_loading" class="menu menu-hidden">
+        <div class="spinner" role="status" aria-label="Loading"></div>
         <p data-translate="menuLoadingText"></p>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
