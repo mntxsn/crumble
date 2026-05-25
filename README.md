@@ -55,17 +55,12 @@ cd I-Still-Dont-Care-About-Cookies
 npm install
 ```
 
-The repo ships two manifests for the two major browser families. The build step copies the right one to `src/manifest.json` — to load the extension as an unpacked add-on locally:
+The repo ships a single Manifest V3 manifest that works on both Firefox (≥ 121) and Chromium-derived browsers. Load `src/` as a temporary extension via:
 
-```bash
-# Firefox
-cp src/manifest_v2.json src/manifest.json
+- **Firefox**: `about:debugging#/runtime/this-firefox` → _Load Temporary Add-on_ → pick any file under `src/`
+- **Chrome / Edge / Brave**: `chrome://extensions` → _Load unpacked_ → select `src/`
 
-# Chrome / Edge / Chromium-derived
-cp src/manifest_v3.json src/manifest.json
-```
-
-Then load `src/` as a temporary extension (`about:debugging` in Firefox, `chrome://extensions` in Chromium browsers).
+Older Firefox versions (< 121) need the last Manifest V2 release from the GitHub releases page.
 
 ### Adding a rule for a new site
 

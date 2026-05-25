@@ -1,16 +1,15 @@
-import { blockUrls, commons, commonJSHandlers, rules } from "./rules.js";
+import { commons, commonJSHandlers, rules } from "./rules.js";
+
 // Vars
 let initPromise = null;
 let cachedRules = {};
 let tabList = {};
-const xmlTabs = {};
 let lastDeclarativeNetRuleId = 1;
 let settings = {
   statusIndicators: true,
   whitelistedDomains: {},
   debug: false,
 };
-const isManifestV3 = chrome.runtime.getManifest().manifest_version == 3;
 
 const SYNC_FLAG_KEY = "syncSettings";
 const DEFAULT_SETTINGS = {
@@ -59,17 +58,12 @@ async function loadSettingsFromStorage() {
 
 // Badges
 function setBadge(tabId, text) {
-  const chromeAction = chrome?.browserAction ?? chrome?.action;
-
-  if (!chromeAction || !settings.statusIndicators) return;
+  if (!settings.statusIndicators) return;
   if (typeof tabId !== "number" || tabId < 0) return;
 
   try {
-    chromeAction.setBadgeText({ text: text || "", tabId });
-
-    if (chromeAction.setBadgeBackgroundColor) {
-      chromeAction.setBadgeBackgroundColor({ color: "#646464", tabId });
-    }
+    chrome.action.setBadgeText({ text: text || "", tabId });
+    chrome.action.setBadgeBackgroundColor({ color: "#646464", tabId });
   } catch {
     // Tab may have been closed between the lookup and the badge call.
   }
@@ -95,9 +89,7 @@ function getHostname(url, cleanup) {
   if (!isHttpUrl(url)) return null;
   try {
     const a = new URL(url);
-    return cleanup
-      ? a.hostname.replace(/^w{2,3}\d*\./i, "")
-      : a.hostname;
+    return cleanup ? a.hostname.replace(/^w{2,3}\d*\./i, "") : a.hostname;
   } catch {
     return null;
   }
@@ -112,36 +104,26 @@ async function updateSettings() {
     statusIndicators: settings.statusIndicators,
     debug: settings.debug,
   });
-
-  if (isManifestV3) {
-    await updateWhitelistRules();
-  }
+  await updateWhitelistRules();
 }
 
 async function updateWhitelistRules() {
-  if (!isManifestV3) {
-    console.warn("Called unsupported function");
-    return;
-  }
   const previousRules = (
     await chrome.declarativeNetRequest.getDynamicRules()
-  ).map((v) => {
-    return v.id;
-  });
+  ).map((v) => v.id);
+
   const addRules = Object.entries(settings.whitelistedDomains)
-    .filter((element) => element[1])
-    .map((v) => {
-      return {
-        id: lastDeclarativeNetRuleId++,
-        priority: 1,
-        action: { type: "allow" },
-        condition: {
-          urlFilter: "*",
-          resourceTypes: ["script", "stylesheet", "xmlhttprequest", "image"],
-          initiatorDomains: [v[0]],
-        },
-      };
-    });
+    .filter(([, enabled]) => enabled)
+    .map(([domain]) => ({
+      id: lastDeclarativeNetRuleId++,
+      priority: 1,
+      action: { type: "allow" },
+      condition: {
+        urlFilter: "*",
+        resourceTypes: ["script", "stylesheet", "xmlhttprequest", "image"],
+        initiatorDomains: [domain],
+      },
+    }));
 
   await chrome.declarativeNetRequest.updateDynamicRules({
     addRules,
@@ -219,9 +201,7 @@ async function toggleWhitelist(tab) {
       tabList[i].whitelisted = !previousState;
     }
   }
-  if (isManifestV3) {
-    await updateWhitelistRules();
-  }
+  await updateWhitelistRules();
 }
 
 // Maintain tab list
@@ -260,25 +240,13 @@ function onUpdatedListener(tabId, changeInfo, tab) {
 
 function onRemovedListener(tabId) {
   delete tabList[tabId];
-  delete xmlTabs[tabId];
 }
 
 async function recreateTabList(magic) {
-  let results;
-  if (isManifestV3) {
-    results = await chrome.tabs.query({});
-  } else {
-    results = await new Promise((resolve, reject) => {
-      chrome.tabs.query({}, (result) => {
-        if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
-        else resolve(result);
-      });
-    });
-  }
+  const results = await chrome.tabs.query({});
 
-  // Build the new list off to the side, then swap in one assignment. Prevents
-  // any concurrent reader (e.g. MV2 synchronous webRequest) from seeing an
-  // empty map mid-rebuild.
+  // Build the new list off to the side, then swap in one assignment so a
+  // concurrent reader never sees an empty map mid-rebuild.
   const newTabList = {};
   for (const tab of results) {
     newTabList[tab.id] = getPreparedTab(tab);
@@ -309,142 +277,10 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-// chrome.runtime.onStartup.addListener(async () => await initialize(true));
 chrome.runtime.onInstalled.addListener(
   async () => await initialize(true, true)
 );
 
-// URL blocking
-
-function blockUrlCallback(d) {
-  // Cached request: find the appropriate tab
-  // TODO: parse rules.json for this function.
-
-  if (d.tabId == -1 && d.initiator) {
-    const initiatorHostname = getHostname(d.initiator, true);
-    for (const tabId in tabList) {
-      if (tabList[tabId].hostname == initiatorHostname) {
-        d.tabId = parseInt(tabId);
-        break;
-      }
-    }
-  }
-
-  if (tabList[d.tabId]?.whitelisted ?? false) {
-    setDisabledBadge(d.tabId);
-    return { cancel: false };
-  }
-
-  if (tabList[d.tabId] && d.url) {
-    const cleanURL = d.url.split("?")[0];
-
-    // To shorten the checklist, many filters are grouped by keywords
-
-    for (const group in blockUrls.common_groups) {
-      if (d.url.indexOf(group) > -1) {
-        const groupFilters = blockUrls.common_groups[group];
-
-        for (const i in groupFilters) {
-          if (
-            (groupFilters[i].q && d.url.indexOf(groupFilters[i].r) > -1) ||
-            (!groupFilters[i].q && cleanURL.indexOf(groupFilters[i].r) > -1)
-          ) {
-            // Check for exceptions
-
-            if (groupFilters[i].e && tabList[d.tabId].host_levels.length > 0) {
-              for (const level in tabList[d.tabId].host_levels) {
-                for (const exception in groupFilters[i].e) {
-                  if (
-                    groupFilters[i].e[exception] ==
-                    tabList[d.tabId].host_levels[level]
-                  ) {
-                    return { cancel: false };
-                  }
-                }
-              }
-            }
-            setSuccessBadge(d.tabId);
-            return { cancel: true };
-          }
-        }
-      }
-    }
-
-    // Check ungrouped filters
-
-    const groupFilters = blockUrls.common;
-
-    for (const i in groupFilters) {
-      if (
-        (groupFilters[i].q && d.url.indexOf(groupFilters[i].r) > -1) ||
-        (!groupFilters[i].q && cleanURL.indexOf(groupFilters[i].r) > -1)
-      ) {
-        // Check for exceptions
-
-        if (groupFilters[i].e && tabList[d.tabId].host_levels.length > 0) {
-          for (const level in tabList[d.tabId].host_levels) {
-            for (const exception in groupFilters[i].e) {
-              if (
-                groupFilters[i].e[exception] ==
-                tabList[d.tabId].host_levels[level]
-              ) {
-                return { cancel: false };
-              }
-            }
-          }
-        }
-        setSuccessBadge(d.tabId);
-        return { cancel: true };
-      }
-    }
-
-    // Site specific filters
-
-    if (d.tabId > -1 && tabList[d.tabId].host_levels.length > 0) {
-      for (const level in tabList[d.tabId].host_levels) {
-        if (blockUrls.specific[tabList[d.tabId].host_levels[level]]) {
-          const specificRules =
-            blockUrls.specific[tabList[d.tabId].host_levels[level]];
-
-          for (const i in specificRules) {
-            if (d.url.indexOf(specificRules[i]) > -1) {
-              setSuccessBadge(d.tabId);
-              return { cancel: true };
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return { cancel: false };
-}
-if (!isManifestV3) {
-  chrome.webRequest.onBeforeRequest.addListener(
-    blockUrlCallback,
-    {
-      urls: ["http://*/*", "https://*/*"],
-      types: ["script", "stylesheet", "xmlhttprequest"],
-    },
-    ["blocking"]
-  );
-
-  chrome.webRequest.onHeadersReceived.addListener(
-    function (d) {
-      if (tabList[d.tabId]) {
-        d.responseHeaders.forEach(function (h) {
-          if (h.name == "Content-Type" || h.name == "content-type") {
-            xmlTabs[d.tabId] = h.value.indexOf("/xml") > -1;
-          }
-        });
-      }
-
-      return { cancel: false };
-    },
-    { urls: ["http://*/*", "https://*/*"], types: ["main_frame"] },
-    ["blocking", "responseHeaders"]
-  );
-}
 // Reporting
 
 function reportWebsite(info, tab, anon, issueType, notes, callback) {
@@ -563,9 +399,9 @@ function activateDomain(hostname, tabId, frameId) {
   let status = false;
   const matched = [];
 
-  // cached_rule.s = Custom css for webpage
-  // cached_rule.c = Common css for webpage
-  // cached_rule.j = Common js  for webpage
+  // cachedRule.s = Custom css for webpage
+  // cachedRule.c = Common css for webpage
+  // cachedRule.j = Common js  for webpage
 
   if (typeof cachedRule.s != "undefined") {
     insertCSS({ tabId, frameId: frameId || 0, css: cachedRule.s });
@@ -613,8 +449,6 @@ function doTheMagic(tabId, frameId, anotherTry) {
     function () {
       // A failure? Retry.
       if (chrome.runtime.lastError) {
-        console.log(chrome.runtime.lastError);
-
         const currentTry = anotherTry || 1;
 
         if (currentTry == 10) {
@@ -751,61 +585,32 @@ chrome.runtime.onMessage.addListener((request, info, sendResponse) => {
 
 function insertCSS(injection, callback) {
   const { tabId, css, file, frameId } = injection;
-
-  if (isManifestV3) {
-    chrome.scripting.insertCSS(
-      {
-        target: { tabId: tabId, frameIds: [frameId || 0] },
-        css: css,
-        files: file ? [file] : undefined,
-        origin: "USER",
-      },
-      callback
-    );
-  } else {
-    chrome.tabs.insertCSS(
-      tabId,
-      {
-        file,
-        code: css,
-        frameId: frameId || 0,
-        runAt: xmlTabs[tabId] ? "document_idle" : "document_start",
-        cssOrigin: "user",
-      },
-      callback
-    );
-  }
+  chrome.scripting.insertCSS(
+    {
+      target: { tabId, frameIds: [frameId || 0] },
+      css,
+      files: file ? [file] : undefined,
+      origin: "USER",
+    },
+    callback
+  );
 }
 
 function executeScript(injection, callback) {
   const { tabId, func, file, frameId } = injection;
-  if (isManifestV3) {
-    // manifest v3
-    chrome.scripting.executeScript(
-      {
-        target: { tabId, frameIds: [frameId || 0] },
-        files: file ? [file] : undefined,
-        func,
-      },
-      callback
-    );
-  } else {
-    // manifest v2
-    chrome.tabs.executeScript(
-      tabId,
-      {
-        file,
-        frameId: frameId || 0,
-        code: func == undefined ? undefined : "(" + func.toString() + ")();",
-        runAt: xmlTabs[tabId] ? "document_idle" : "document_end",
-      },
-      callback
-    );
-  }
+  chrome.scripting.executeScript(
+    {
+      target: { tabId, frameIds: [frameId || 0] },
+      files: file ? [file] : undefined,
+      func,
+    },
+    callback
+  );
 }
 
-async function loadCachedRules() {
-  // TODO: Load cached rules for V3 to improve speed (Requires testing to see if this actually is faster for v3)
+function loadCachedRules() {
+  // TODO: Load cached rules to improve speed (requires testing to confirm
+  // the parsed-cache is actually faster than re-evaluating rules.js).
   cachedRules = {};
 }
 

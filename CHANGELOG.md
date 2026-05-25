@@ -110,6 +110,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **Dropped Manifest V2 support.** Single Manifest V3 manifest now works on
+  both Firefox (≥ 121) and Chromium-derived browsers. The `manifest_v2.json`
+  / `manifest_v3.json` split is gone; the canonical file is
+  `src/manifest.json`. `background.html` and the dev-only `hotreload.js`
+  were removed, the `webRequest` permission was dropped (everything goes
+  through declarativeNetRequest now), and ~150 lines of MV2/MV3
+  conditional code came out of `background.js`. The `webRequestBlocking`
+  path is fully replaced by the pre-compiled DNR rules from `rules.json`
+  (see `tools/generate-block-rules.js`). Build & release workflows
+  simplified accordingly. Firefox versions below 121 stay on the last MV2
+  release.
 - `package.json` `repository`, `bugs`, and `homepage` now point at
   `I-Still-Dont-Care-About-Cookies`.
 - Options page layout: settings split into a main section and a Backup

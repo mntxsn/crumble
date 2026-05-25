@@ -10,12 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Move to manifest v3
-        run: |
-          cp src/manifest_v3.json src/manifest.json
-      - name: Clear hotreload
-        run: |
-          echo "" > src/data/hotreload.js
       - name: Archive Release
         run: |
           7z a 'ISDCAC-chrome-source.zip' -r './src/*'
@@ -43,12 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Move to manifest v2
-        run: |
-          cp src/manifest_v2.json src/manifest.json
-      - name: Clear hotreload
-        run: |
-          echo "" > src/data/hotreload.js
       - name: web-ext build
         id: web-ext-build
         uses: kewisch/action-web-ext@v1
