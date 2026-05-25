@@ -66,6 +66,52 @@ export const LOCALE_NAMES = {
 
 export const DEFAULT_LOCALE = "en";
 
+/**
+ * Pick the locale to actually load. Mirrors the `theme: "auto"` pattern:
+ *   - "en"/"de"/... etc. (explicit choice) → use as-is
+ *   - "auto" / unset / not bundled → detect from the browser UI language and
+ *     map to a bundled locale (e.g. "de-AT" → "de", "zh-Hans-CN" → "zh_CN"),
+ *     falling back to English when no map is possible.
+ * `uiLanguage` is an explicit override for tests (so we don't need to mock
+ * chrome.i18n / navigator).
+ */
+export function resolveLocale(settingValue, uiLanguage) {
+  if (settingValue && AVAILABLE_LOCALES.includes(settingValue)) {
+    return settingValue;
+  }
+  let ui = uiLanguage;
+  if (ui === undefined) {
+    try {
+      if (
+        typeof chrome !== "undefined" &&
+        chrome.i18n &&
+        typeof chrome.i18n.getUILanguage === "function"
+      ) {
+        ui = chrome.i18n.getUILanguage() || "";
+      } else if (typeof navigator !== "undefined") {
+        ui = navigator.language || "";
+      } else {
+        ui = "";
+      }
+    } catch {
+      ui = "";
+    }
+  }
+  if (!ui) return DEFAULT_LOCALE;
+
+  const normalised = ui.replace(/-/g, "_").toLowerCase();
+  // Exact match (handles "zh_CN" → "zh_CN")
+  for (const code of AVAILABLE_LOCALES) {
+    if (code.toLowerCase() === normalised) return code;
+  }
+  // Base-language match (strips region: "de_AT" → "de")
+  const base = normalised.split("_")[0];
+  if (AVAILABLE_LOCALES.includes(base)) return base;
+  // Chinese variants all map to simplified — that's what we bundle.
+  if (base === "zh") return "zh_CN";
+  return DEFAULT_LOCALE;
+}
+
 async function fetchLocale(locale) {
   try {
     const url = chrome.runtime.getURL(`_locales/${locale}/messages.json`);

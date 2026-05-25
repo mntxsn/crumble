@@ -9,6 +9,7 @@
 <a href="https://github.com/mntxsn/crumble/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/mntxsn/crumble.svg?logo=github&style=for-the-badge"></a>
 <a href="https://github.com/mntxsn/crumble/releases"><img alt="Releases" src="https://img.shields.io/github/downloads/mntxsn/crumble/total?color=blue&label=downloads&style=for-the-badge"></a>
 <a href="LICENSE"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge"></a>
+<a href="https://github.com/sponsors/mntxsn"><img alt="Sponsor on GitHub" src="https://img.shields.io/badge/Sponsor-mntxsn-ea4aaa?logo=github-sponsors&style=for-the-badge"></a>
 
 </div>
 
@@ -41,7 +42,7 @@ Once published, store badges will go here.
 - **Backup** — download or restore your whitelist as JSON from the options page
 - **Sync** (opt-in) — mirror your whitelist across devices via browser sync
 - **Themes** — auto / light / dark
-- **Languages** — 26 locales bundled, English by default
+- **Languages** — 26 locales bundled, auto-detected from your browser (English as fallback)
 - **Keyboard shortcut** — `Alt+Shift+C` to toggle the current site (rebindable)
 - **Debug mode** (opt-in) — see which rule fired on the current site in the background console
 - **Status badges** — green check (✅) when Crumble acted, grey ⛔ when whitelisted
@@ -90,6 +91,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the contributor's guide.
 
 26 locales are bundled. The English message file is the source of truth; missing keys in other locales fall back to English at runtime via the i18n loader (`src/data/js/i18n.js`). Translation PRs against individual `src/_locales/<lang>/messages.json` files are welcome.
 
+## Support
+
+If Crumble saves you time, you can [sponsor the project on GitHub](https://github.com/sponsors/mntxsn). Sponsorship keeps the project independent and the rules current.
+
 ## License
 
 GPL-3.0 — see [LICENSE](LICENSE).
@@ -109,7 +114,7 @@ Crumble's 2.0 line adds:
 - Whitelist sync + JSON import/export backup
 - Unit tests and CI gates on every PR
 
-Modernisation done with the help of [Claude](https://www.anthropic.com/claude) (Opus 4.7). The model paired with one developer across a multi-session refactor pass; every change reviewed and committed locally before publish.
+Modernisation done with one developer across a multi-session refactor pass; every change reviewed and committed locally before publish.
 
 - Original author: [Daniel Kladnik](https://www.linkedin.com/in/dkladnik)
 - Upstream fork maintainer: [OhMyGuus](https://github.com/OhMyGuus/)

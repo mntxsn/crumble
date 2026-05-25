@@ -91,6 +91,31 @@
     "message": "Language",
     "description": "Label for the language selector in the options page."
   },
+
+  "optionLanguageAuto": {
+    "message": "Auto (match browser)",
+    "description": "Language option: match the browser's UI language, fall back to English."
+  },
+
+  "popupSupport": {
+    "message": "Support Crumble",
+    "description": "Title/aria-label for the heart icon in the popup header that links to the GitHub Sponsors page."
+  },
+
+  "supportHeading": {
+    "message": "Support Crumble",
+    "description": "Section heading for the support/donate card on the options page."
+  },
+
+  "supportLead": {
+    "message": "If Crumble saves you from clicking through cookie banners, consider sponsoring the project. Sponsorship keeps the project independent and the rules current.",
+    "description": "Helper text below the support heading on the options page."
+  },
+
+  "supportButton": {
+    "message": "Sponsor on GitHub",
+    "description": "Button text linking to the GitHub Sponsors page."
+  },
   "optionLanguageHint": {
     "message": "Choose the language used by the popup and this options page. The extension defaults to English; pick a different language at any time.",
     "description": "Helper text below the language selector."

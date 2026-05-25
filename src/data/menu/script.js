@@ -1,8 +1,4 @@
-import {
-  AVAILABLE_LOCALES,
-  DEFAULT_LOCALE,
-  buildTranslator,
-} from "../js/i18n.js";
+import { buildTranslator, resolveLocale } from "../js/i18n.js";
 
 const SYNC_FLAG_KEY = "syncSettings";
 
@@ -21,7 +17,7 @@ function readSettings() {
         ? chrome.storage.sync
         : chrome.storage.local;
       area.get(
-        { settings: { theme: "auto", language: DEFAULT_LOCALE } },
+        { settings: { theme: "auto", language: "auto" } },
         ({ settings }) => {
           resolve(settings || {});
         }
@@ -191,6 +187,14 @@ function translate() {
   for (const element of document.querySelectorAll("[data-translate]")) {
     element.textContent = t(element.dataset.translate);
   }
+  for (const element of document.querySelectorAll("[data-translate-title]")) {
+    element.setAttribute("title", t(element.dataset.translateTitle));
+  }
+  for (const element of document.querySelectorAll(
+    "[data-translate-aria-label]"
+  )) {
+    element.setAttribute("aria-label", t(element.dataset.translateAriaLabel));
+  }
   reportNotesTextarea.placeholder = t("reportNotesPlaceholder");
 }
 
@@ -198,9 +202,7 @@ async function bootstrap() {
   const settings = await readSettings();
   applyTheme(settings.theme || "auto");
 
-  const lang = AVAILABLE_LOCALES.includes(settings.language)
-    ? settings.language
-    : DEFAULT_LOCALE;
+  const lang = resolveLocale(settings.language);
   document.documentElement.lang = lang.replace("_", "-");
 
   const translator = await buildTranslator(lang);

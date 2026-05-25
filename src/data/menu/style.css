@@ -32,6 +32,30 @@ body {
   flex: 1;
 }
 
+.header #support {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.header #support:hover,
+.header #support:focus-visible {
+  color: #e91e63;
+  background: var(--surface-hover);
+}
+
+.header #support:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .menu {
   display: flex;
   flex-direction: column;

@@ -93,6 +93,17 @@ h2 {
   border-color: var(--accent-hover);
 }
 
+/* Anchor styled like a button (used by the Support card). */
+a.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  cursor: pointer;
+}
+
 #whitelist {
   width: 100%;
   min-height: 180px;

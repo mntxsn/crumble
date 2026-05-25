@@ -103,6 +103,31 @@
     "message": "Sprache",
     "description": "Label for the language selector in the options page."
   },
+
+  "optionLanguageAuto": {
+    "message": "Automatisch (Browser folgen)",
+    "description": "Language option: match the browser's UI language, fall back to English."
+  },
+
+  "popupSupport": {
+    "message": "Crumble unterstützen",
+    "description": "Title/aria-label for the heart icon in the popup header that links to the GitHub Sponsors page."
+  },
+
+  "supportHeading": {
+    "message": "Crumble unterstützen",
+    "description": "Section heading for the support/donate card on the options page."
+  },
+
+  "supportLead": {
+    "message": "Wenn Crumble dir das Wegklicken von Cookie-Bannern abnimmt, erwäge das Projekt zu sponsorn. Spenden halten das Projekt unabhängig und die Regeln aktuell.",
+    "description": "Helper text below the support heading on the options page."
+  },
+
+  "supportButton": {
+    "message": "Auf GitHub sponsern",
+    "description": "Button text linking to the GitHub Sponsors page."
+  },
   "optionLanguageHint": {
     "message": "Wähle die Sprache für das Popup und diese Einstellungsseite. Standardmäßig ist die Erweiterung auf Englisch – die Sprache kann jederzeit gewechselt werden.",
     "description": "Helper text below the language selector."

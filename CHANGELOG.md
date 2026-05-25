@@ -30,6 +30,26 @@ the new identity, repo, and maintainer.
 - **Logo**: the modernised flat-cookie icon introduced during the
   refactor is kept. SVG source at `src/icons/logo.svg`.
 
+### Pre-release polish (still 2.0.0)
+
+- **Language now auto-detects on first install.** `settings.language`
+  defaults to `"auto"` and a new `resolveLocale` helper maps the
+  browser's UI language (e.g. `de-AT`, `zh-Hans-CN`) to the closest
+  bundled locale, falling back to English. The Settings dropdown gains
+  an explicit "Auto (match browser)" entry at the top; picking a
+  specific language stays sticky as before. Mirrors the `theme: "auto"`
+  behaviour.
+- **Sponsor link**. Heart icon in the popup header and a Support card
+  on the options page link to <https://github.com/sponsors/mntxsn>.
+  README gains a sponsor badge. No nag screens, no auto-opening tabs —
+  user-initiated only.
+- New i18n keys: `optionLanguageAuto`, `popupSupport`, `supportHeading`,
+  `supportLead`, `supportButton` (en + de translated; others fall back
+  to English via the i18n loader).
+- New unit tests cover `resolveLocale` for explicit settings, auto-detect,
+  region-subtag stripping, the zh-* family, and the "unknown locale →
+  English" fallback. `npm test` now runs 29 tests.
+
 ### Modernisation note
 
 Crumble's 2.0 line was built by [mntxsn](https://github.com/mntxsn) in

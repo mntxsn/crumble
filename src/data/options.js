@@ -1,8 +1,8 @@
 import {
   AVAILABLE_LOCALES,
   LOCALE_NAMES,
-  DEFAULT_LOCALE,
   buildTranslator,
+  resolveLocale,
 } from "./js/i18n.js";
 import { parseWhitelistInput } from "./js/utils.js";
 
@@ -11,7 +11,9 @@ const DEFAULT_SETTINGS = {
   statusIndicators: true,
   debug: false,
   theme: "auto",
-  language: DEFAULT_LOCALE,
+  // "auto" = match browser UI language at runtime (see resolveLocale).
+  // Switches to an explicit locale code as soon as the user picks one.
+  language: "auto",
 };
 
 // `syncSettings` is intentionally stored only in `local` — never synced. It
@@ -85,6 +87,15 @@ function showSaved(elemId, messageKey, isError) {
 function populateLanguageSelect() {
   const select = document.getElementById("language");
   select.innerHTML = "";
+
+  // "Auto (match browser)" first so it's the natural pick when the user
+  // hasn't decided.
+  const autoOpt = document.createElement("option");
+  autoOpt.value = "auto";
+  autoOpt.dataset.translate = "optionLanguageAuto";
+  autoOpt.textContent = "Auto (match browser)";
+  select.appendChild(autoOpt);
+
   for (const code of AVAILABLE_LOCALES) {
     const opt = document.createElement("option");
     opt.value = code;
@@ -93,8 +104,11 @@ function populateLanguageSelect() {
   }
 }
 
-async function setLanguage(locale) {
-  const translator = await buildTranslator(locale);
+async function setLanguage(settingValue) {
+  // settingValue may be "auto" or a bundled locale code; resolveLocale picks
+  // the actual locale to load translations from.
+  const actual = resolveLocale(settingValue);
+  const translator = await buildTranslator(actual);
   t = translator.t;
   document.documentElement.lang = translator.locale.replace("_", "-");
   applyTranslations();
@@ -153,6 +167,19 @@ function applyTranslations() {
     .getElementById("import_trigger")
     .setAttribute("value", t("optionsImport"));
 
+  document.getElementById("support_heading").textContent = orDefault(
+    "supportHeading",
+    "Support Crumble"
+  );
+  document.getElementById("support_lead").textContent = orDefault(
+    "supportLead",
+    "If Crumble saves you from clicking through cookie banners, consider sponsoring the project."
+  );
+  document.getElementById("support_link").textContent = orDefault(
+    "supportButton",
+    "Sponsor on GitHub"
+  );
+
   // Translate any element marked with data-translate (used by <option> tags
   // in the theme select).
   for (const el of document.querySelectorAll("[data-translate]")) {
@@ -205,13 +232,17 @@ async function restoreOptions() {
     ? settings.theme
     : "auto";
 
-  const lang = AVAILABLE_LOCALES.includes(settings.language)
-    ? settings.language
-    : DEFAULT_LOCALE;
-  document.getElementById("language").value = lang;
+  const storedLang = settings.language;
+  const dropdownValue =
+    storedLang === "auto" || !storedLang
+      ? "auto"
+      : AVAILABLE_LOCALES.includes(storedLang)
+        ? storedLang
+        : "auto";
+  document.getElementById("language").value = dropdownValue;
 
   applyTheme(settings.theme);
-  await setLanguage(lang);
+  await setLanguage(dropdownValue);
 }
 
 function exportSettings() {
