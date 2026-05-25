@@ -99,6 +99,13 @@
   box-sizing: border-box;
 }
 
+/* Browser default `[hidden] { display: none }` has very low specificity and
+   gets overridden by component rules like `.menu button { display: block }`.
+   Bring `hidden` back to "actually hides the element" semantics. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);

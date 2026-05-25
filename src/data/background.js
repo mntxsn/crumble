@@ -530,12 +530,16 @@ chrome.runtime.onMessage.addListener((request, info, sendResponse) => {
     if (typeof request == "object") {
       if (request.tabId && tabList[request.tabId]) {
         if (request.command == "get_active_tab") {
-          const response = { tab: tabList[request.tabId] };
+          // Shallow-copy the tab so we don't accidentally mutate tabList when
+          // overriding hostname. The previous reference-based version could
+          // assign a `false` from getWhitelistedDomain back onto tabList,
+          // permanently corrupting the entry.
+          const stored = tabList[request.tabId];
+          const response = { tab: { ...stored } };
 
           if (response.tab.whitelisted) {
-            response.tab.hostname = getWhitelistedDomain(
-              tabList[request.tabId]
-            );
+            const matched = getWhitelistedDomain(stored);
+            if (matched) response.tab.hostname = matched;
           }
           sendResponse(response);
           responseSend = true;

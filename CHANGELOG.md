@@ -87,6 +87,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **Popup toggle button broken after a11y refactor**: the `hidden`
+  attribute introduced by the a11y polish was being defeated by the
+  popup's `.menu button { display: block }` rule (higher specificity
+  than browser default `[hidden]`), so toggle/refresh/report buttons
+  stayed visible after the script tried to hide them. A
+  `[hidden] { display: none !important }` rule in `theme.css`
+  restores the expected semantics.
+- **`get_active_tab` corrupted the tab list**: the handler returned a
+  reference to the cached tab entry and then overwrote `hostname` with
+  the result of `getWhitelistedDomain` — which can be `false` during
+  the toggle-roundtrip race window. Now shallow-copies before any
+  override and only applies the override if a real domain matched.
+  The bug existed for a long time but was masked because previously
+  the popup hid the toggle button after the first click; the a11y
+  refactor briefly unmasked it.
 - Issue-report links pointed at the abandoned upstream repo
   (`I-Dont-Care-About-Cookies`). Both the in-extension GitHub link and the
   `package.json` metadata now reference this repo, so the issue template
