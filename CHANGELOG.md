@@ -87,6 +87,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **Reload-after-toggle ignored the new whitelist state**: the
+  `toggle_extension` message handler kicked off `toggleWhitelist`
+  without awaiting it, so the popup's response (and the subsequent
+  Reload click) could fire while `persistSettings` and
+  `updateWhitelistRules` were still in flight. The reloaded page then
+  ran with the pre-toggle whitelist state. The handler now awaits the
+  full chain before responding; the popup's follow-up actions are
+  correctly sequenced after the persistence completes.
 - **Popup toggle button broken after a11y refactor**: the `hidden`
   attribute introduced by the a11y polish was being defeated by the
   popup's `.menu button { display: block }` rule (higher specificity

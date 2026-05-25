@@ -544,7 +544,15 @@ chrome.runtime.onMessage.addListener((request, info, sendResponse) => {
           sendResponse(response);
           responseSend = true;
         } else if (request.command == "toggle_extension") {
-          toggleWhitelist(tabList[request.tabId]);
+          // Wait for the whitelist write + DNR rule update to complete
+          // before responding. Otherwise the popup's follow-up actions
+          // (especially a Reload click) can fire while persistSettings or
+          // updateWhitelistRules is still in flight, and the reloaded page
+          // then runs with the previous whitelist state.
+          responseSend = true;
+          toggleWhitelist(tabList[request.tabId])
+            .catch((err) => console.error("Toggle failed:", err))
+            .finally(() => sendResponse());
         } else if (request.command == "report_website") {
           reportWebsite(
             info,
