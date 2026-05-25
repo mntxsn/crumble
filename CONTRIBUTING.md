@@ -8,7 +8,8 @@ This document covers the practical bits: how the source is laid out, how to add 
 
 ```
 src/
-├── manifest.json                  Single Manifest V3 manifest (Chrome + Firefox)
+├── manifest.chrome.json           Chrome MV3 manifest (service_worker only)
+├── manifest.firefox.json          Firefox MV3 manifest (incl. background.scripts)
 ├── icons/                         16/32/48/128 PNGs + the SVG source
 ├── rules.json                     Pre-compiled declarativeNetRequest ruleset
 ├── _locales/<lang>/messages.json  Per-language strings
@@ -56,10 +57,22 @@ npm install
 
 ### Loading the unpacked extension
 
-The same `src/` folder loads in both browser families — Manifest V3 is the canonical format.
+We ship MV3 for both browser families, but the manifest's `background` declaration differs: Chrome only accepts `service_worker`, Firefox still needs `scripts` for older releases. Pick the matching variant:
+
+```bash
+# Firefox
+cp src/manifest.firefox.json src/manifest.json
+
+# Chrome / Edge / Brave / Arc
+cp src/manifest.chrome.json src/manifest.json
+```
+
+Then load `src/`:
 
 - **Firefox** (≥ 113): `about:debugging#/runtime/this-firefox` → _Load Temporary Add-on_ → pick any file under `src/`.
-- **Chromium-based** (Chrome / Edge / Brave / Arc): `chrome://extensions` → enable _Developer mode_ → _Load unpacked_ → select `src/`.
+- **Chromium-based**: `chrome://extensions` → enable _Developer mode_ → _Load unpacked_ → select `src/`.
+
+`src/manifest.json` is a build artifact (gitignored). The two `src/manifest.<browser>.json` files are the canonical sources; if you touch one, mirror the change to the other when applicable.
 
 After loading, pin the toolbar icon for easier testing.
 

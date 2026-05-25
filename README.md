@@ -55,9 +55,19 @@ cd I-Still-Dont-Care-About-Cookies
 npm install
 ```
 
-The repo ships a single Manifest V3 manifest that works on both Firefox (≥ 113) and Chromium-derived browsers. Load `src/` as a temporary extension via:
+The repo ships two MV3 manifest variants because Chrome and Firefox disagree on how MV3 backgrounds are declared (Chrome only accepts `service_worker`; Firefox needs `scripts` until its service-worker pref is universally on). The build pipeline picks the right one; for local development copy the matching variant:
 
-- **Firefox**: `about:debugging#/runtime/this-firefox` → _Load Temporary Add-on_ → pick any file under `src/`
+```bash
+# Firefox
+cp src/manifest.firefox.json src/manifest.json
+
+# Chrome / Edge / Brave
+cp src/manifest.chrome.json src/manifest.json
+```
+
+Then load `src/`:
+
+- **Firefox** (≥ 113): `about:debugging#/runtime/this-firefox` → _Load Temporary Add-on_ → pick any file under `src/`
 - **Chrome / Edge / Brave**: `chrome://extensions` → _Load unpacked_ → select `src/`
 
 Older Firefox versions (< 113) need the last Manifest V2 release from the GitHub releases page.

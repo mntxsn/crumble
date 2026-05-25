@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Stage Chrome manifest
+        run: cp src/manifest.chrome.json src/manifest.json
       - name: Archive Release
         run: |
           7z a 'ISDCAC-chrome-source.zip' -r './src/*'
@@ -37,6 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Stage Firefox manifest
+        run: cp src/manifest.firefox.json src/manifest.json
       - name: web-ext build
         id: web-ext-build
         uses: kewisch/action-web-ext@v1
