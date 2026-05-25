@@ -142,5 +142,81 @@
   "modalIssueDescription": {
     "message": "Select this option to signify an issue on this page related to a modal - like 'there is a pop-up box blocking interaction'.",
     "description": "Explanation of what a modal issue is"
+  },
+  "optionDebug": {
+    "message": "Debug-logging (console)",
+    "description": "Option text for enabling debug logging in the background console."
+  },
+  "optionSync": {
+    "message": "Instellingen synchroniseren tussen apparaten",
+    "description": "Option text for enabling browser-sync of settings."
+  },
+  "optionTheme": {
+    "message": "Thema",
+    "description": "Label for the theme selector (auto/light/dark)."
+  },
+  "optionThemeAuto": {
+    "message": "Systeem volgen",
+    "description": "Theme option: follow the operating system preference."
+  },
+  "optionThemeLight": {
+    "message": "Licht",
+    "description": "Theme option: always light."
+  },
+  "optionThemeDark": {
+    "message": "Donker",
+    "description": "Theme option: always dark."
+  },
+  "optionLanguage": {
+    "message": "Taal",
+    "description": "Label for the language selector in the options page."
+  },
+  "optionLanguageHint": {
+    "message": "Kies de taal die wordt gebruikt door het pop-up en deze instellingenpagina. De extensie gebruikt standaard Engels; je kunt op elk moment van taal wisselen.",
+    "description": "Helper text below the language selector."
+  },
+  "commandToggleWhitelist": {
+    "message": "Extensie in-/uitschakelen op de huidige site",
+    "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
+  },
+  "optionsGeneralSection": {
+    "message": "Algemeen",
+    "description": "Section heading for the general settings card."
+  },
+  "optionsWhitelistSection": {
+    "message": "Witte lijst",
+    "description": "Section heading for the whitelist card."
+  },
+  "optionsWhitelistHint": {
+    "message": "Eén domein per regel. Subdomeinen en www-prefixen worden bij opslaan genormaliseerd.",
+    "description": "Helper text below the whitelist textarea."
+  },
+  "optionsBackupSection": {
+    "message": "Back-up",
+    "description": "Section heading for the backup/export feature."
+  },
+  "optionsBackupHint": {
+    "message": "Download je witte lijst en instellingen als JSON-bestand, of herstel ze uit een eerdere back-up.",
+    "description": "Helper text below the backup heading."
+  },
+  "optionsExport": {
+    "message": "Back-up downloaden",
+    "description": "Button text to export settings as JSON file."
+  },
+  "optionsImport": {
+    "message": "Herstellen uit back-up…",
+    "description": "Button text to import settings from JSON file."
+  },
+  "optionsImportSuccess": {
+    "message": "Back-up hersteld.",
+    "description": "Status text after a successful import."
+  },
+  "optionsImportError": {
+    "message": "Kan back-upbestand niet lezen.",
+    "description": "Status text after a failed import."
+  },
+  "optionsSaved": {
+    "message": "Opgeslagen.",
+    "description": "Status text after settings were saved."
   }
 }

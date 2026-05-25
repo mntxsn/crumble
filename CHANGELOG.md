@@ -77,6 +77,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   with English fallback for keys that haven't been translated yet.
 - German (`de`) translations for all newly introduced settings strings
   (theme, language, debug, sync, backup, section headings, status messages).
+- Spanish, French, Italian, Portuguese, and Dutch (`es`, `fr`, `it`, `pt`,
+  `nl`) translations for the same set of new settings strings (~19 keys
+  each). Remaining 20 locales still fall back to English at runtime;
+  contributions welcome via Crowdin or PR.
+- **`CONTRIBUTING.md`**: practical contributor guide covering project
+  layout, daily commands, rule format, the `npm run add-rule` workflow,
+  localisation flow, test/CI conventions, and commit style.
 
 ### Fixed
 

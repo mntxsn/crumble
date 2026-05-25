@@ -142,5 +142,81 @@
   "modalIssueDescription": {
     "message": "Choisissez cette option pour indiquer un problème lié à une boîte de dialogue sur cette page, par exemple « il y a une fenêtre pop-up qui empêche toute interaction ».",
     "description": "Explanation of what a modal issue is"
+  },
+  "optionDebug": {
+    "message": "Journalisation (console)",
+    "description": "Option text for enabling debug logging in the background console."
+  },
+  "optionSync": {
+    "message": "Synchroniser les paramètres entre appareils",
+    "description": "Option text for enabling browser-sync of settings."
+  },
+  "optionTheme": {
+    "message": "Thème",
+    "description": "Label for the theme selector (auto/light/dark)."
+  },
+  "optionThemeAuto": {
+    "message": "Suivre le système",
+    "description": "Theme option: follow the operating system preference."
+  },
+  "optionThemeLight": {
+    "message": "Clair",
+    "description": "Theme option: always light."
+  },
+  "optionThemeDark": {
+    "message": "Sombre",
+    "description": "Theme option: always dark."
+  },
+  "optionLanguage": {
+    "message": "Langue",
+    "description": "Label for the language selector in the options page."
+  },
+  "optionLanguageHint": {
+    "message": "Choisissez la langue utilisée par le popup et cette page d'options. L'extension utilise l'anglais par défaut ; vous pouvez en changer à tout moment.",
+    "description": "Helper text below the language selector."
+  },
+  "commandToggleWhitelist": {
+    "message": "Activer/désactiver l'extension sur le site actuel",
+    "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
+  },
+  "optionsGeneralSection": {
+    "message": "Général",
+    "description": "Section heading for the general settings card."
+  },
+  "optionsWhitelistSection": {
+    "message": "Liste blanche",
+    "description": "Section heading for the whitelist card."
+  },
+  "optionsWhitelistHint": {
+    "message": "Un domaine par ligne. Les sous-domaines et préfixes www sont normalisés à l'enregistrement.",
+    "description": "Helper text below the whitelist textarea."
+  },
+  "optionsBackupSection": {
+    "message": "Sauvegarde",
+    "description": "Section heading for the backup/export feature."
+  },
+  "optionsBackupHint": {
+    "message": "Téléchargez votre liste blanche et vos paramètres au format JSON, ou restaurez-les depuis une sauvegarde précédente.",
+    "description": "Helper text below the backup heading."
+  },
+  "optionsExport": {
+    "message": "Télécharger la sauvegarde",
+    "description": "Button text to export settings as JSON file."
+  },
+  "optionsImport": {
+    "message": "Restaurer depuis une sauvegarde…",
+    "description": "Button text to import settings from JSON file."
+  },
+  "optionsImportSuccess": {
+    "message": "Sauvegarde restaurée.",
+    "description": "Status text after a successful import."
+  },
+  "optionsImportError": {
+    "message": "Impossible de lire le fichier de sauvegarde.",
+    "description": "Status text after a failed import."
+  },
+  "optionsSaved": {
+    "message": "Enregistré.",
+    "description": "Status text after settings were saved."
   }
 }

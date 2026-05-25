@@ -142,5 +142,81 @@
   "modalIssueDescription": {
     "message": "Seleccione esta opción para indicar un problema en esta página relacionado con un modal, como 'hay un cuadro emergente que bloquea la interacción'.",
     "description": "Explanation of what a modal issue is"
+  },
+  "optionDebug": {
+    "message": "Registro de depuración (consola)",
+    "description": "Option text for enabling debug logging in the background console."
+  },
+  "optionSync": {
+    "message": "Sincronizar configuración entre dispositivos",
+    "description": "Option text for enabling browser-sync of settings."
+  },
+  "optionTheme": {
+    "message": "Tema",
+    "description": "Label for the theme selector (auto/light/dark)."
+  },
+  "optionThemeAuto": {
+    "message": "Usar configuración del sistema",
+    "description": "Theme option: follow the operating system preference."
+  },
+  "optionThemeLight": {
+    "message": "Claro",
+    "description": "Theme option: always light."
+  },
+  "optionThemeDark": {
+    "message": "Oscuro",
+    "description": "Theme option: always dark."
+  },
+  "optionLanguage": {
+    "message": "Idioma",
+    "description": "Label for the language selector in the options page."
+  },
+  "optionLanguageHint": {
+    "message": "Elige el idioma del popup y de esta página de opciones. La extensión usa inglés por defecto; puedes cambiar de idioma en cualquier momento.",
+    "description": "Helper text below the language selector."
+  },
+  "commandToggleWhitelist": {
+    "message": "Activar/desactivar la extensión en el sitio actual",
+    "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
+  },
+  "optionsGeneralSection": {
+    "message": "General",
+    "description": "Section heading for the general settings card."
+  },
+  "optionsWhitelistSection": {
+    "message": "Lista blanca",
+    "description": "Section heading for the whitelist card."
+  },
+  "optionsWhitelistHint": {
+    "message": "Un dominio por línea. Los subdominios y prefijos www se normalizan al guardar.",
+    "description": "Helper text below the whitelist textarea."
+  },
+  "optionsBackupSection": {
+    "message": "Copia de seguridad",
+    "description": "Section heading for the backup/export feature."
+  },
+  "optionsBackupHint": {
+    "message": "Descarga tu lista blanca y configuración como archivo JSON, o restáuralas desde una copia anterior.",
+    "description": "Helper text below the backup heading."
+  },
+  "optionsExport": {
+    "message": "Descargar copia de seguridad",
+    "description": "Button text to export settings as JSON file."
+  },
+  "optionsImport": {
+    "message": "Restaurar desde copia…",
+    "description": "Button text to import settings from JSON file."
+  },
+  "optionsImportSuccess": {
+    "message": "Copia restaurada.",
+    "description": "Status text after a successful import."
+  },
+  "optionsImportError": {
+    "message": "No se pudo leer el archivo de copia.",
+    "description": "Status text after a failed import."
+  },
+  "optionsSaved": {
+    "message": "Guardado.",
+    "description": "Status text after settings were saved."
   }
 }

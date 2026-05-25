@@ -142,5 +142,81 @@
   "modalIssueDescription": {
     "message": "Select this option to signify an issue on this page related to a modal - like 'there is a pop-up box blocking interaction'.",
     "description": "Explanation of what a modal issue is"
+  },
+  "optionDebug": {
+    "message": "Logging di debug (console)",
+    "description": "Option text for enabling debug logging in the background console."
+  },
+  "optionSync": {
+    "message": "Sincronizza impostazioni tra dispositivi",
+    "description": "Option text for enabling browser-sync of settings."
+  },
+  "optionTheme": {
+    "message": "Tema",
+    "description": "Label for the theme selector (auto/light/dark)."
+  },
+  "optionThemeAuto": {
+    "message": "Segui il sistema",
+    "description": "Theme option: follow the operating system preference."
+  },
+  "optionThemeLight": {
+    "message": "Chiaro",
+    "description": "Theme option: always light."
+  },
+  "optionThemeDark": {
+    "message": "Scuro",
+    "description": "Theme option: always dark."
+  },
+  "optionLanguage": {
+    "message": "Lingua",
+    "description": "Label for the language selector in the options page."
+  },
+  "optionLanguageHint": {
+    "message": "Scegli la lingua usata dal popup e da questa pagina delle impostazioni. L'estensione predefinita è l'inglese; puoi cambiare lingua in qualsiasi momento.",
+    "description": "Helper text below the language selector."
+  },
+  "commandToggleWhitelist": {
+    "message": "Attiva/disattiva l'estensione sul sito corrente",
+    "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
+  },
+  "optionsGeneralSection": {
+    "message": "Generale",
+    "description": "Section heading for the general settings card."
+  },
+  "optionsWhitelistSection": {
+    "message": "Whitelist",
+    "description": "Section heading for the whitelist card."
+  },
+  "optionsWhitelistHint": {
+    "message": "Un dominio per riga. Sottodomini e prefissi www vengono normalizzati al salvataggio.",
+    "description": "Helper text below the whitelist textarea."
+  },
+  "optionsBackupSection": {
+    "message": "Backup",
+    "description": "Section heading for the backup/export feature."
+  },
+  "optionsBackupHint": {
+    "message": "Scarica la tua whitelist e impostazioni come file JSON, o ripristinali da un backup precedente.",
+    "description": "Helper text below the backup heading."
+  },
+  "optionsExport": {
+    "message": "Scarica backup",
+    "description": "Button text to export settings as JSON file."
+  },
+  "optionsImport": {
+    "message": "Ripristina da backup…",
+    "description": "Button text to import settings from JSON file."
+  },
+  "optionsImportSuccess": {
+    "message": "Backup ripristinato.",
+    "description": "Status text after a successful import."
+  },
+  "optionsImportError": {
+    "message": "Impossibile leggere il file di backup.",
+    "description": "Status text after a failed import."
+  },
+  "optionsSaved": {
+    "message": "Salvato.",
+    "description": "Status text after settings were saved."
   }
 }
