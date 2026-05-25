@@ -55,12 +55,12 @@ cd I-Still-Dont-Care-About-Cookies
 npm install
 ```
 
-The repo ships a single Manifest V3 manifest that works on both Firefox (≥ 121) and Chromium-derived browsers. Load `src/` as a temporary extension via:
+The repo ships a single Manifest V3 manifest that works on both Firefox (≥ 113) and Chromium-derived browsers. Load `src/` as a temporary extension via:
 
 - **Firefox**: `about:debugging#/runtime/this-firefox` → _Load Temporary Add-on_ → pick any file under `src/`
 - **Chrome / Edge / Brave**: `chrome://extensions` → _Load unpacked_ → select `src/`
 
-Older Firefox versions (< 121) need the last Manifest V2 release from the GitHub releases page.
+Older Firefox versions (< 113) need the last Manifest V2 release from the GitHub releases page.
 
 ### Adding a rule for a new site
 
