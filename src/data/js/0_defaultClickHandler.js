@@ -512,9 +512,29 @@
   const searchPairsJoinedKeys = searchPairsKeys.join(",");
   let timeoutDuration = 0;
 
+  // Shadow-DOM-aware querySelectorAll. Many modern CMPs (Cookiebot v3,
+  // Usercentrics, vendor-specific banners) render their UI inside open
+  // shadow roots — a plain document.querySelectorAll never sees those
+  // elements. This walker traverses into every reachable shadow root.
+  // Closed shadow roots stay invisible (by spec) and we accept that.
+  function queryAllDeep(root, selector) {
+    const out = [];
+    if (root.querySelectorAll) {
+      for (const el of root.querySelectorAll(selector)) out.push(el);
+      for (const el of root.querySelectorAll("*")) {
+        if (el.shadowRoot) {
+          for (const inner of queryAllDeep(el.shadowRoot, selector)) {
+            out.push(inner);
+          }
+        }
+      }
+    }
+    return out;
+  }
+
   function doOnePass(counter) {
     timeoutDuration = 50;
-    document.querySelectorAll(searchPairsJoinedKeys).forEach(function (box) {
+    queryAllDeep(document, searchPairsJoinedKeys).forEach(function (box) {
       searchPairsKeys.forEach(function (selector) {
         if (box.matches(selector)) {
           (box.shadowRoot || box)
@@ -554,9 +574,8 @@
       });
     });
 
-    document
-      .querySelectorAll(searchGroups[counter % searchGroupsLength])
-      .forEach(function (element) {
+    queryAllDeep(document, searchGroups[counter % searchGroupsLength]).forEach(
+      function (element) {
         if (element.click && !element.classList.contains("idcac")) {
           element.classList.add("idcac");
 

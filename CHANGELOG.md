@@ -27,6 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **SPA navigation tracking**: `webNavigation.onHistoryStateUpdated` keeps the
   tab list fresh after client-side navigations (Reddit, X, YouTube, etc.) so
   block decisions and badge state stay accurate.
+- **Shadow-DOM-aware querying** in the default click handler. Many modern
+  CMPs (Cookiebot v3, Usercentrics, vendor-specific banners) render their
+  UI inside open shadow roots — `document.querySelectorAll` doesn't see
+  them. A new `queryAllDeep` walker recursively descends through every
+  reachable shadow root before running the selector, catching banners
+  that previously stayed visible. Closed shadow roots remain invisible
+  (by spec).
 - New i18n strings (English only — translations welcome via Crowdin):
   `optionDebug`, `optionSync`, `optionTheme`, `optionThemeAuto`,
   `optionThemeLight`, `optionThemeDark`, `optionsGeneralSection`,
