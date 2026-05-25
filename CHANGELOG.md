@@ -37,9 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   (`src/data/css/theme.css`), card-based options layout, system font stack,
   proper focus rings, button semantics, and a CSS-only loading spinner.
 - **Modernised extension icon**: flat cookie with cleaner colour palette,
-  evenly placed chocolate chips, and a green check badge that signals the
-  banner has been handled. SVG source kept at `src/icons/logo.svg` so the
-  PNGs can be regenerated at any size.
+  evenly placed chocolate chips, and a kept bite mark for character. The
+  three crumbs from the original are gone. SVG source lives at
+  `src/icons/logo.svg` so the PNGs can be regenerated at any size.
 - **Dark mode**: theme selector in settings with three modes — _Match system_
   (default, follows `prefers-color-scheme`), _Light_, _Dark_. Applied to both
   the popup and the options page.

@@ -2,30 +2,24 @@
   <defs>
     <mask id="bite">
       <rect width="128" height="128" fill="white"/>
-      <circle cx="100" cy="30" r="18" fill="black"/>
+      <circle cx="108" cy="30" r="20" fill="black"/>
     </mask>
   </defs>
 
-  <!-- Cookie body, with bite taken from upper-right -->
   <g mask="url(#bite)">
-    <circle cx="58" cy="58" r="46" fill="#c89263"/>
-    <ellipse cx="42" cy="36" rx="18" ry="9" fill="#dab18e" opacity="0.45"/>
+    <!-- Cookie body -->
+    <circle cx="64" cy="64" r="52" fill="#c89263"/>
 
-    <!-- Chocolate chips, evenly scattered -->
-    <circle cx="36" cy="50" r="6" fill="#3d2817"/>
-    <circle cx="68" cy="44" r="5" fill="#3d2817"/>
-    <circle cx="46" cy="74" r="6" fill="#3d2817"/>
-    <circle cx="80" cy="72" r="5" fill="#3d2817"/>
-    <circle cx="28" cy="80" r="4" fill="#3d2817"/>
-    <circle cx="64" cy="94" r="5" fill="#3d2817"/>
-    <circle cx="92" cy="50" r="4" fill="#3d2817"/>
+    <!-- Subtle upper-left highlight -->
+    <ellipse cx="48" cy="38" rx="20" ry="10" fill="#dab18e" opacity="0.45"/>
+
+    <!-- Chocolate chips -->
+    <circle cx="40" cy="50" r="6" fill="#3d2817"/>
+    <circle cx="74" cy="46" r="5" fill="#3d2817"/>
+    <circle cx="52" cy="78" r="6" fill="#3d2817"/>
+    <circle cx="84" cy="74" r="5" fill="#3d2817"/>
+    <circle cx="32" cy="84" r="4" fill="#3d2817"/>
+    <circle cx="66" cy="98" r="5" fill="#3d2817"/>
+    <circle cx="96" cy="56" r="4" fill="#3d2817"/>
   </g>
-
-  <!-- Green check badge (signals "cookies handled") -->
-  <circle cx="100" cy="100" r="22" fill="#ffffff"/>
-  <circle cx="100" cy="100" r="19" fill="#10b981"/>
-  <path d="M 90 100 L 97 108 L 111 92"
-        stroke="#ffffff" stroke-width="4"
-        stroke-linecap="round" stroke-linejoin="round"
-        fill="none"/>
 </svg>
