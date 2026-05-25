@@ -36,6 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Modernised popup and options UI**: new shared design tokens
   (`src/data/css/theme.css`), card-based options layout, system font stack,
   proper focus rings, button semantics, and a CSS-only loading spinner.
+- **Modernised extension icon**: flat cookie with cleaner colour palette,
+  evenly placed chocolate chips, and a green check badge that signals the
+  banner has been handled. SVG source kept at `src/icons/logo.svg` so the
+  PNGs can be regenerated at any size.
 - **Dark mode**: theme selector in settings with three modes — _Match system_
   (default, follows `prefers-color-scheme`), _Light_, _Dark_. Applied to both
   the popup and the options page.
@@ -117,4 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   calls from `0_defaultClickHandler.js` that fired on every dismissal.
   Diagnostic noise is now opt-in via the debug-mode toggle.
 - Removed `src/data/menu/spinner.svg` (replaced by the CSS-only spinner).
+- Removed the obsolete `gecko_android.id` field from `manifest_v2.json` —
+  the field isn't allowed there and triggered a Firefox manifest warning
+  on every load. The extension ID continues to come from `gecko.id`.
 
