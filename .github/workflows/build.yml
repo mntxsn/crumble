@@ -13,7 +13,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ISDCAC-chrome
+          name: crumble-chrome
           path: ./src/*
 
       - name: Stage Firefox manifest
@@ -25,14 +25,14 @@ jobs:
         with:
           cmd: build
           source: src
-          filename: "ISDCAC.xpi"
+          filename: "crumble.xpi"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ISDCAC-firefox-source
+          name: crumble-firefox-source
           path: ./src/*
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ISDCAC-firefox-unsigned
+          name: crumble-firefox-unsigned
           path: ${{ steps.web-ext-build.outputs.target }}

@@ -5,7 +5,40 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.0.0] — Crumble
+
+Crumble is the rebranded successor to the upstream `I still don't care
+about cookies` fork (`v1.1.9`). The 2.0 line is the first release under
+the new identity, repo, and maintainer.
+
+### Branding
+
+- **Renamed** to **Crumble**. The `extensionName` is now "Crumble" across
+  all 26 locales (it's a brand, not localised). The English
+  `extensionDescription` reads "Skip cookie consent banners on almost
+  every site you visit. Open-source, no telemetry." — translated for
+  de/es/fr/it/pt/nl; other locales fall back to English at the manifest
+  layer.
+- **New extension ID** for Firefox: `crumble@mntxsn.github.io` (was
+  `idcac-pub@guus.ninja`). The Chrome and AMO store listings are
+  separate from the upstream listings.
+- **New canonical repo**: <https://github.com/mntxsn/crumble>. All
+  in-extension links (issue template, package.json metadata) updated.
+- **New version line**: 2.0.0. A clean break from the upstream 1.x
+  release history to signal: new identity, new architecture, new
+  maintainer.
+- **Logo**: the modernised flat-cookie icon introduced during the
+  refactor is kept. SVG source at `src/icons/logo.svg`.
+
+### Modernisation note
+
+Crumble's 2.0 line was built by [mntxsn](https://github.com/mntxsn) in
+collaboration with [Claude](https://www.anthropic.com/claude)
+(Anthropic, Opus 4.7) across a multi-session refactor. Every change was
+reviewed and committed locally before publishing. The full inventory of
+bug fixes, robustness improvements, UI work, and architectural changes
+that went into 2.0 follows below — these were drafted during the
+final pre-release sprint.
 
 ### Added
 

@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "I still don't care about cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Verzija zajednice ekstenzije `I don't care about cookies` (ne Avast)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Ekstenzija je ugašena na $HOSTNAME$.",

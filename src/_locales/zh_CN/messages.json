@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "我仍然不在乎cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "扩展程序的社区版本“我仍然不在乎Cookies” (无Avast)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "插件在$HOSTNAME$上不可用。",

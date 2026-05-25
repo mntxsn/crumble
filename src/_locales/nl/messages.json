@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "Cookies kunnen mij nog steeds niets schelen",
+    "message": "Crumble",
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Community versie van de extensie `Cookies kunnen mij nog steeds niets schelen` (geen Avast)",
+    "message": "Sla cookie-banners over op bijna elke website. Open-source, geen telemetrie.",
     "description": "Description of the extension."
   },
   "reportSkippedTitle": {

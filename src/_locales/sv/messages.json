@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "I still don't care about cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Community version of the extension `I don't care about cookies` (no Avast)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Utökningen är avstängd på $HOSTNAME$.",

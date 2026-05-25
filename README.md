@@ -1,43 +1,50 @@
 <div align="center">
 
-<img src="src/icons/128.png" alt="" />
+<img src="src/icons/128.png" alt="Crumble" />
 
-# I still don't care about cookies
+# Crumble
 
-### Get rid of cookie warnings on almost every website.
+### Skip cookie consent banners on almost every site.
 
-<a href="https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/OhMyGuus/I-Still-Dont-Care-About-Cookies.svg?logo=github&style=for-the-badge"></a>
-<a href="https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/releases"><img alt="Releases" src="https://img.shields.io/github/downloads/OhMyGuus/I-Still-Dont-Care-About-Cookies/total?color=blue&label=downloads&style=for-the-badge"></a>
+<a href="https://github.com/mntxsn/crumble/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/mntxsn/crumble.svg?logo=github&style=for-the-badge"></a>
+<a href="https://github.com/mntxsn/crumble/releases"><img alt="Releases" src="https://img.shields.io/github/downloads/mntxsn/crumble/total?color=blue&label=downloads&style=for-the-badge"></a>
 <a href="LICENSE"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge"></a>
 
 </div>
 
 ## What it does
 
-Cookie consent prompts have become unavoidable, intrusive, and rarely actually about your privacy. This extension takes them off your screen:
+Cookie consent prompts have become unavoidable, intrusive, and rarely actually about your privacy. Crumble takes them off your screen:
 
 - **Hides or auto-dismisses** cookie banners on thousands of sites.
 - **Sets stored consent flags** so banners don't reappear when you come back.
 - **Talks directly to the major Consent Management Platforms** (OneTrust, Cookiebot, Didomi, TrustArc, Quantcast Choice) via their published JS APIs — more reliable than clicking through DOM selectors.
 - **Blocks known third-party consent SDKs** at the network layer where it's safe to do so.
+- **Walks shadow DOM** to catch banners rendered inside web components, which most extensions miss.
 
 No account, no tracking, no telemetry.
 
 ## Install
 
-<a href="https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get for Firefox" height="65"></a>
-<a href="https://chrome.google.com/webstore/detail/i-still-dont-care-about-c/edibdbjcniadpccecjdfdjjppcpchdlm"><img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="Get for Chrome" height="65"></a>
-<a href="https://microsoftedge.microsoft.com/addons/detail/i-still-dont-care-about-/kkacdgacpkediooahopgcbdahlpipheh"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Get_it_from_Microsoft_Badge.svg/320px-Get_it_from_Microsoft_Badge.svg.png" alt="Get for Edge" height="65"></a>
+Store listings will be added once Crumble is published. For now, install manually from a release.
 
-Manual install guides: [Firefox](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/wiki/Firefox-installation-guide) · [Chrome](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/wiki/Chrome-installation-guide).
+[Latest release →](https://github.com/mntxsn/crumble/releases/latest)
+
+- **Firefox**: download the signed `.xpi` from the release page and drop it on `about:addons`.
+- **Chromium-based browsers**: download the `crumble-chrome-source.zip`, unzip, then load the folder via `chrome://extensions` → _Developer mode_ → _Load unpacked_.
+
+Once published, store badges will go here.
 
 ## Features
 
-- **Per-domain whitelist** — disable the extension on individual sites via the toolbar popup
+- **Per-domain whitelist** — disable Crumble on individual sites via the toolbar popup
 - **Backup** — download or restore your whitelist as JSON from the options page
 - **Sync** (opt-in) — mirror your whitelist across devices via browser sync
+- **Themes** — auto / light / dark
+- **Languages** — 26 locales bundled, English by default
+- **Keyboard shortcut** — `Alt+Shift+C` to toggle the current site (rebindable)
 - **Debug mode** (opt-in) — see which rule fired on the current site in the background console
-- **Status badges** — green check (✅) when the extension acted, grey ⛔ when whitelisted
+- **Status badges** — green check (✅) when Crumble acted, grey ⛔ when whitelisted
 
 ## When a site still shows a banner
 
@@ -45,17 +52,17 @@ Manual install guides: [Firefox](https://github.com/OhMyGuus/I-Still-Dont-Care-A
 2. Try the page in a clean profile — broken sites are sometimes broken by unrelated extensions.
 3. If it really is us, use the **Report** button in the popup:
    - **GitHub** opens a pre-filled issue template.
-   - **Anonymous** sends a short report to our API (no personal data).
+   - **Anonymous** sends a short report to a small reporting API (no personal data).
 
 ## Development
 
 ```bash
-git clone https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies.git
-cd I-Still-Dont-Care-About-Cookies
+git clone https://github.com/mntxsn/crumble.git
+cd crumble
 npm install
 ```
 
-The repo ships two MV3 manifest variants because Chrome and Firefox disagree on how MV3 backgrounds are declared (Chrome only accepts `service_worker`; Firefox needs `scripts` until its service-worker pref is universally on). The build pipeline picks the right one; for local development copy the matching variant:
+The repo ships two MV3 manifest variants because Chrome and Firefox disagree on the `background` block (Chrome only accepts `service_worker`; Firefox needs `scripts` until its service-worker pref is universally on). For local testing copy the matching variant:
 
 ```bash
 # Firefox
@@ -65,47 +72,47 @@ cp src/manifest.firefox.json src/manifest.json
 cp src/manifest.chrome.json src/manifest.json
 ```
 
-Then load `src/`:
+Then load `src/` as a temporary extension (`about:debugging` in Firefox, `chrome://extensions` in Chromium browsers).
 
-- **Firefox** (≥ 113): `about:debugging#/runtime/this-firefox` → _Load Temporary Add-on_ → pick any file under `src/`
-- **Chrome / Edge / Brave**: `chrome://extensions` → _Load unpacked_ → select `src/`
-
-Older Firefox versions (< 113) need the last Manifest V2 release from the GitHub releases page.
-
-### Adding a rule for a new site
+### Daily commands
 
 ```bash
-npm run add-rule -- --domain example.com --css "#cookie-banner { display: none }"
+npm test                       # unit tests (Node's built-in runner, no extra deps)
+npm run lint                   # ESLint
+npm run prettier-check         # Prettier verification
+npm run add-rule -- --domain example.com --css "…"
+npm run generate-block-rules   # regenerate src/rules.json from rules.js
 ```
 
-The tool edits `src/data/rules.js` in place. See [tools/README.md](tools/README.md) for the full flag list (custom CSS, common-CSS reference, handler reference).
-
-### Other scripts
-
-```bash
-npm run lint                  # ESLint
-npm run prettier              # Format the tree
-npm run generate-block-rules  # Regenerate src/rules.json from rules.js (MV3 DNR)
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contributor's guide.
 
 ## Translation
 
-We use [Crowdin](https://crowdin.com/project/i-still-dont-care-about-cookie/) for translations. Pull requests against individual `src/_locales/<lang>/messages.json` files are also fine.
+26 locales are bundled. The English message file is the source of truth; missing keys in other locales fall back to English at runtime via the i18n loader (`src/data/js/i18n.js`). Translation PRs against individual `src/_locales/<lang>/messages.json` files are welcome.
 
 ## License
 
 GPL-3.0 — see [LICENSE](LICENSE).
 
-## Credits
+## Origin & credits
 
-This project began as a fork of Daniel Kladnik's _I don't care about cookies_ (v3.4.3, GPL-3.0) and is now maintained independently. The rule set and core architecture descend from years of patient cataloguing in the original project — Daniel and the original contributors deserve credit for that work.
+Crumble started life as a fork of the abandoned `I still don't care about cookies` extension (which was itself a fork of Daniel Kladnik's original `I don't care about cookies`, sold to Avast in 2022). Most of the per-site rule data and the original architecture come from years of patient cataloguing in those projects — Daniel and every contributor who reported a banner along the way deserve the credit for that.
+
+Crumble's 2.0 line adds:
+
+- Manifest V3 only, single canonical codebase
+- Modernised popup and options UI with dark mode
+- IAB TCF and per-vendor CMP API integration (OneTrust, Cookiebot, Didomi, TrustArc)
+- Shadow-DOM-aware querying in the default click handler
+- MutationObserver-driven banner detection (replaces 250 ms polling)
+- 26-language opt-in language selector independent of browser locale
+- Whitelist sync + JSON import/export backup
+- Unit tests and CI gates on every PR
+
+Modernisation done with the help of [Claude](https://www.anthropic.com/claude) (Opus 4.7). The model paired with one developer across a multi-session refactor pass; every change reviewed and committed locally before publish.
 
 - Original author: [Daniel Kladnik](https://www.linkedin.com/in/dkladnik)
-- Maintainer: [OhMyGuus](https://github.com/OhMyGuus/)
-- Project setup help: [appeasementPolitik](https://github.com/appeasementPolitik)
-- [All contributors](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/graphs/contributors)
-- [Translators](https://crowdin.com/project/i-still-dont-care-about-cookie/members)
+- Upstream fork maintainer: [OhMyGuus](https://github.com/OhMyGuus/)
+- Crumble maintainer: [mntxsn](https://github.com/mntxsn)
 
-<a href="https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/graphs/contributors">
-  <img alt="Contributors" src="https://contrib.rocks/image?repo=OhMyGuus/I-Still-Dont-Care-About-Cookies" />
-</a>
+A full list of upstream contributors is preserved at the original fork: [I-Still-Dont-Care-About-Cookies contributors](https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/graphs/contributors).

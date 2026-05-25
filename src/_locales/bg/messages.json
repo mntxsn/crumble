@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "Все още не ме е грижа за бисквитките",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Общностна версия на добавката „Все още не ме е грижа за бисквитките“ (без Avast)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Добавката е изключена за $HOSTNAME$.",

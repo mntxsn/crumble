@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "I still don't care about cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Community-Version der Erweiterung `I don't care about cookies` (kein Avast)",
+    "message": "Cookie-Banner auf nahezu jeder Website automatisch entfernen. Open-Source, keine Telemetrie.",
     "description": "Description of the extension."
   },
   "reportSkippedTitle": {
@@ -75,102 +75,82 @@
     "message": "Statusanzeige",
     "description": "Option text for enabling the status indicator"
   },
-
   "optionDebug": {
     "message": "Debug-Logging (Konsole)",
     "description": "Option text for enabling debug logging in the background console."
   },
-
   "optionSync": {
     "message": "Einstellungen geräteübergreifend synchronisieren",
     "description": "Option text for enabling browser-sync of settings."
   },
-
   "optionTheme": {
     "message": "Design",
     "description": "Label for the theme selector (auto/light/dark)."
   },
-
   "optionThemeAuto": {
     "message": "Systemeinstellung übernehmen",
     "description": "Theme option: follow the operating system preference."
   },
-
   "optionThemeLight": {
     "message": "Hell",
     "description": "Theme option: always light."
   },
-
   "optionThemeDark": {
     "message": "Dunkel",
     "description": "Theme option: always dark."
   },
-
   "optionLanguage": {
     "message": "Sprache",
     "description": "Label for the language selector in the options page."
   },
-
   "optionLanguageHint": {
     "message": "Wähle die Sprache für das Popup und diese Einstellungsseite. Standardmäßig ist die Erweiterung auf Englisch – die Sprache kann jederzeit gewechselt werden.",
     "description": "Helper text below the language selector."
   },
-
   "commandToggleWhitelist": {
     "message": "Erweiterung auf der aktuellen Seite umschalten",
     "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
   },
-
   "optionsGeneralSection": {
     "message": "Allgemein",
     "description": "Section heading for the general settings card."
   },
-
   "optionsWhitelistSection": {
     "message": "Whitelist",
     "description": "Section heading for the whitelist card."
   },
-
   "optionsWhitelistHint": {
     "message": "Eine Domain pro Zeile. Subdomains und www-Präfixe werden beim Speichern normalisiert.",
     "description": "Helper text below the whitelist textarea."
   },
-
   "optionsBackupSection": {
     "message": "Sicherung",
     "description": "Section heading for the backup/export feature."
   },
-
   "optionsBackupHint": {
     "message": "Lade deine Whitelist und Einstellungen als JSON-Datei herunter oder stelle sie aus einer früheren Sicherung wieder her.",
     "description": "Helper text below the backup heading."
   },
-
   "optionsExport": {
     "message": "Sicherung herunterladen",
     "description": "Button text to export settings as JSON file."
   },
-
   "optionsImport": {
     "message": "Aus Sicherung wiederherstellen…",
     "description": "Button text to import settings from JSON file."
   },
-
   "optionsImportSuccess": {
     "message": "Sicherung wiederhergestellt.",
     "description": "Status text after a successful import."
   },
-
   "optionsImportError": {
     "message": "Sicherungsdatei konnte nicht gelesen werden.",
     "description": "Status text after a failed import."
   },
-
   "optionsSaved": {
     "message": "Gespeichert.",
     "description": "Status text after settings were saved."
   },
-
   "optionsButton": {
     "message": "Einstellungen speichern",
     "description": "Options text for SAVE button."

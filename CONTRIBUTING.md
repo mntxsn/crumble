@@ -1,4 +1,4 @@
-# Contributing
+# Contributing to Crumble
 
 Thanks for caring enough about cookie banners to make this better.
 
@@ -50,8 +50,8 @@ tools/
 ## Local setup
 
 ```bash
-git clone <your fork>
-cd I-Still-Dont-Care-About-Cookies
+git clone https://github.com/mntxsn/crumble.git
+cd crumble
 npm install
 ```
 

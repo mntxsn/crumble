@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "Încă nu îmi pasă de cookie-uri",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Versiunea comunitară a extensiei \"Nu îmi pasă de cookie-uri\" (fără Avast)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Extensia este dezactivată pe $HOSTNAME$.",

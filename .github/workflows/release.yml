@@ -14,16 +14,20 @@ jobs:
         run: cp src/manifest.chrome.json src/manifest.json
       - name: Archive Release
         run: |
-          7z a 'ISDCAC-chrome-source.zip' -r './src/*'
+          7z a 'crumble-chrome-source.zip' -r './src/*'
       - uses: actions/upload-artifact@v4
         with:
-          name: ISDCAC-chrome
+          name: crumble-chrome
           path: ./src/*
+      # TODO: fill in `extension-id` once the Crumble Chrome Web Store listing
+      # exists. The `secrets.CHROME_*` values also need to be provisioned in
+      # the GitHub repo settings before this step will succeed.
       - name: Upload & release
+        if: ${{ vars.CHROME_EXTENSION_ID != '' }}
         uses: mnao305/chrome-extension-upload@v4.0.1
         with:
-          file-path: ISDCAC-chrome-source.zip
-          extension-id: edibdbjcniadpccecjdfdjjppcpchdlm
+          file-path: crumble-chrome-source.zip
+          extension-id: ${{ vars.CHROME_EXTENSION_ID }}
           client-id: "${{ secrets.CHROME_CLIENT_ID }}"
           client-secret: "${{ secrets.CHROME_CLIENT_SECRET }}"
           refresh-token: "${{ secrets.CHROME_REFRESH_TOKEN }}"
@@ -34,7 +38,7 @@ jobs:
         with:
           draft: true
           files: |
-            ISDCAC-chrome-source.zip
+            crumble-chrome-source.zip
   release-firefox:
     runs-on: ubuntu-latest
     steps:
@@ -47,16 +51,20 @@ jobs:
         with:
           cmd: build
           source: src
-          filename: ISDCAC.xpi
+          filename: crumble.xpi
       - uses: actions/upload-artifact@v4
         with:
-          name: ISDCAC-firefox-unsigned
+          name: crumble-firefox-unsigned
           path: "${{ steps.web-ext-build.outputs.target }}"
       - uses: actions/upload-artifact@v4
         with:
-          name: ISDCAC-firefox-source
+          name: crumble-firefox-source
           path: ./src/*
+      # TODO: AMO signing/publishing requires API keys provisioned as
+      # secrets.AMO_SIGN_KEY / secrets.AMO_SIGN_SECRET. Once the Crumble AMO
+      # listing exists, replace the slug below with the new listing slug.
       - name: web-ext sign
+        if: ${{ vars.AMO_LISTING_SLUG != '' }}
         id: web-ext-sign
         uses: kewisch/action-web-ext@v1
         with:
@@ -67,20 +75,23 @@ jobs:
           apiSecret: "${{ secrets.AMO_SIGN_SECRET }}"
           timeout: 900000
       - name: Sleep for 15 minutes
+        if: ${{ vars.AMO_LISTING_SLUG != '' }}
         run: sleep 15m
         shell: bash
       - name: Download xpi
+        if: ${{ vars.AMO_LISTING_SLUG != '' }}
         run: >
           wget
-          https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/istilldontcareaboutcookies-latest.xpi
+          https://addons.mozilla.org/firefox/downloads/latest/${{ vars.AMO_LISTING_SLUG }}/latest.xpi
           --trust-server-names
       - uses: actions/upload-artifact@v4
+        if: ${{ vars.AMO_LISTING_SLUG != '' }}
         with:
-          name: ISDCAC-firefox-signed
-          path: istilldontcareaboutcookies-*.xpi
+          name: crumble-firefox-signed
+          path: latest.xpi
       - name: Rename source xpi
         run: |
-          mv ${{ steps.web-ext-build.outputs.target }} ISDCAC-firefox-source.zip
+          mv ${{ steps.web-ext-build.outputs.target }} crumble-firefox-source.zip
       - name: Create Release
         uses: softprops/action-gh-release@v1
         env:
@@ -88,5 +99,5 @@ jobs:
         with:
           draft: true
           files: |
-            ISDCAC-firefox-source.zip
-            istilldontcareaboutcookies-*.xpi
+            crumble-firefox-source.zip
+            latest.xpi

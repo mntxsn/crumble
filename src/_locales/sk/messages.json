@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "I still don't care about cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Komunitná verzia rozšírenia `I don't care about cookies` (nepatrí Avastu)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Rozšírenie je na $HOSTNAME$ vypnuté.",

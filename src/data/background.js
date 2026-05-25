@@ -310,7 +310,7 @@ function reportWebsite(info, tab, anon, issueType, notes, callback) {
   }
   if (!anon) {
     chrome.tabs.create({
-      url: `https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/issues/new?assignees=OhMyGuus&labels=Website+request&template=website_request.yml&title=%5BREQ%5D%3A+${encodeURIComponent(
+      url: `https://github.com/mntxsn/crumble/issues/new?labels=Website+request&template=website_request.yml&title=%5BREQ%5D%3A+${encodeURIComponent(
         hostname
       )}&url=${encodeURIComponent(hostname)}&version=${encodeURIComponent(
         chrome.runtime.getManifest().version
@@ -321,6 +321,11 @@ function reportWebsite(info, tab, anon, issueType, notes, callback) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
+    // TODO(crumble): this still posts to the upstream "I still don't care
+    // about cookies" reporting API while Crumble is in early standalone
+    // release. Replace with a self-hosted endpoint or remove the anonymous
+    // report flow once a decision is made. The GitHub-report path is
+    // unaffected and always available as an alternative.
     fetch("https://api.istilldontcareaboutcookies.com/api/report", {
       method: "POST",
       headers: {

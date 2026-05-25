@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "Jeg er stadig ligeglad med cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Fællesskabsversion af udvidelsen `I don't care about cookies` (ingen Avast)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Udvidelse er deaktiveret på $HOSTNAME$.",

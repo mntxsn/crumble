@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "Çerezleri hala umursamıyorum",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "'Çerezleri hala umursamıyorum' uzantısının topluluk sürümü (Avast yok)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Uzantı $HOSTNAME$ için devre dışı bırakıldı.",

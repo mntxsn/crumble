@@ -1,14 +1,12 @@
 {
   "extensionName": {
-    "message": "I still don't care about cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
   },
-
   "extensionDescription": {
-    "message": "Community version of the extension `I don't care about cookies` (no Avast)",
+    "message": "Skip cookie consent banners on almost every site you visit. Open-source, no telemetry.",
     "description": "Description of the extension."
   },
-
   "reportSkippedTitle": {
     "message": "Extension is disabled on $HOSTNAME$.",
     "description": "Tells the user it cannot report a whitelisted domain.",
@@ -19,12 +17,10 @@
       }
     }
   },
-
   "reportSkippedMessage": {
     "message": "You have disabled the extension on this website. Please enable it and check if you see the cookie warning before reporting.",
     "description": "Tells the user it cannot report a whitelisted domain."
   },
-
   "reportConfirm": {
     "message": "Would you like to report a cookie warning on $HOSTNAME$?",
     "description": "Ask for confirmation before reporting a website. Don't use quotes here.",
@@ -35,7 +31,6 @@
       }
     }
   },
-
   "menuEnable": {
     "message": "Enable extension on $HOSTNAME$",
     "description": "Menu option.",
@@ -46,7 +41,6 @@
       }
     }
   },
-
   "menuDisable": {
     "message": "Disable extension on $HOSTNAME$",
     "description": "Menu option.",
@@ -57,137 +51,110 @@
       }
     }
   },
-
   "menuIdle": {
     "message": "Extension doesn't work on this website",
     "description": "Menu option visible when enabling/disabling doesn't work."
   },
-
   "menuReport": {
     "message": "Report a cookie warning",
     "description": "Menu option."
   },
-
   "menuSupport": {
     "message": "Support this project",
     "description": "Menu option."
   },
-
   "optionsTitle": {
     "message": "Settings",
     "description": "Title for the options page."
   },
-
   "optionsWhitelist": {
     "message": "List of all whitelisted websites, one website per line:",
     "description": "Options text for whitelist box."
   },
-
   "optionStatusIndicators": {
     "message": "status indicators",
     "description": "Option text for enabling the status indicator"
   },
-
   "optionDebug": {
     "message": "Debug logging (console)",
     "description": "Option text for enabling debug logging in the background console."
   },
-
   "optionSync": {
     "message": "Sync settings across devices",
     "description": "Option text for enabling browser-sync of settings."
   },
-
   "optionTheme": {
     "message": "Theme",
     "description": "Label for the theme selector (auto/light/dark)."
   },
-
   "optionLanguage": {
     "message": "Language",
     "description": "Label for the language selector in the options page."
   },
-
   "optionLanguageHint": {
     "message": "Choose the language used by the popup and this options page. The extension defaults to English; pick a different language at any time.",
     "description": "Helper text below the language selector."
   },
-
   "commandToggleWhitelist": {
     "message": "Toggle the extension on the current site",
     "description": "Description shown in the browser's keyboard-shortcut settings for the toggle command."
   },
-
   "optionThemeAuto": {
     "message": "Match system",
     "description": "Theme option: follow the operating system preference."
   },
-
   "optionThemeLight": {
     "message": "Light",
     "description": "Theme option: always light."
   },
-
   "optionThemeDark": {
     "message": "Dark",
     "description": "Theme option: always dark."
   },
-
   "optionsGeneralSection": {
     "message": "General",
     "description": "Section heading for the general settings card."
   },
-
   "optionsWhitelistSection": {
     "message": "Whitelist",
     "description": "Section heading for the whitelist card."
   },
-
   "optionsWhitelistHint": {
     "message": "Each line is one domain. Subdomains and www-prefixes are normalised on save.",
     "description": "Helper text below the whitelist textarea."
   },
-
   "optionsBackupHint": {
     "message": "Download your whitelist and settings as a JSON file, or restore from a previous backup.",
     "description": "Helper text below the backup heading."
   },
-
   "optionsButton": {
     "message": "Save settings",
     "description": "Options text for SAVE button."
   },
-
   "optionsBackupSection": {
     "message": "Backup",
     "description": "Section heading for the backup/export feature."
   },
-
   "optionsExport": {
     "message": "Download backup",
     "description": "Button text to export settings as JSON file."
   },
-
   "optionsImport": {
     "message": "Restore from backup…",
     "description": "Button text to import settings from JSON file."
   },
-
   "optionsImportSuccess": {
     "message": "Backup restored.",
     "description": "Status text after a successful import."
   },
-
   "optionsImportError": {
     "message": "Could not read backup file.",
     "description": "Status text after a failed import."
   },
-
   "optionsSaved": {
     "message": "Saved.",
     "description": "Status text after settings were saved."
   },
-
   "reportGithub": {
     "message": "Report using Github",
     "description": "Menu item to report using Github"

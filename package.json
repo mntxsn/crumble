@@ -1,8 +1,8 @@
 {
-  "name": "isdcac",
+  "name": "crumble",
   "type": "module",
-  "version": "1.1.9",
-  "description": "Get rid of cookie warnings from almost all websites!",
+  "version": "2.0.0",
+  "description": "Skip cookie consent banners on almost every site you visit.",
   "main": "index.js",
   "scripts": {
     "lint": "eslint src .",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies.git"
+    "url": "git+https://github.com/mntxsn/crumble.git"
   },
-  "author": "OhMyGuus & Community",
+  "author": "mntxsn",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies/issues"
+    "url": "https://github.com/mntxsn/crumble/issues"
   },
-  "homepage": "https://github.com/OhMyGuus/I-Still-Dont-Care-About-Cookies#readme",
+  "homepage": "https://github.com/mntxsn/crumble#readme",
   "devDependencies": {
     "@eslint/js": "^9.37.0",
     "eslint": "^9.37.0",

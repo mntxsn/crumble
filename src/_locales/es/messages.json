@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "Todavía no me importan las cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Versión comunitaria de la extensión `No me importan las cookies` (sin Avast)",
+    "message": "Salta los banners de consentimiento de cookies en casi todos los sitios. Código abierto, sin telemetría.",
     "description": "Description of the extension."
   },
   "reportSkippedTitle": {

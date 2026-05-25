@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "I still don't care about cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Versione della community dell'estensione `I don't care about cookies` (no Avast)",
+    "message": "Salta i banner di consenso ai cookie su quasi tutti i siti. Open-source, senza telemetria.",
     "description": "Description of the extension."
   },
   "reportSkippedTitle": {

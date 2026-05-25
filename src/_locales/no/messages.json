@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "Jeg bryr meg fortsatt ikke om informasjonskapsler",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "En versjon av utvidelsen `Jeg bryr meg ikke om informasjonskapsler` (uten Avast) som er laget av felleskapet",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Utvidelsen er avskrudd på $HOSTNAME$.",

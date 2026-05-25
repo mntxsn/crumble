@@ -19,9 +19,11 @@ jobs:
             const issueBody = context.payload.issue.body || '';
             const issueAuthor = context.payload.issue.user.login;
 
-            // Skip if issue is created by OhMyGuus-Bot
-            if (issueAuthor === 'OhMyGuus-Bot') {
-              console.log('Skipping issue created by OhMyGuus-Bot');
+            // Skip if issue is created by the project bot account (if any).
+            // Wire up by setting the `BOT_USER` repo variable.
+            const botUser = process.env.BOT_USER;
+            if (botUser && issueAuthor === botUser) {
+              console.log(`Skipping issue created by ${botUser}`);
               return;
             }
 

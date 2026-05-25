@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "I still don't care about cookies",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Społecznościowa wersja rozszerzenia `I don't care about cookies` (bez Avast'a)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Rozszerzenie jest wyłączone na $HOSTNAME$.",

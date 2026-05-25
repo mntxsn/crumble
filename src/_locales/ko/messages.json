@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "쿠키에 대해선 신경 쓰지 않아",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "`쿠키에 대해선 신경 쓰지 않아`의 커뮤니티 버전이에요.(Avast 없음)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "$HOSTNAME$ 사이트에서 확장 프로그램이 사용 중지됐어요.",

@@ -1,11 +1,7 @@
 {
   "extensionName": {
-    "message": "Eg bryr meg framleis ikkje om informasjonskapslar",
+    "message": "Crumble",
     "description": "Name of the extension."
-  },
-  "extensionDescription": {
-    "message": "Community version of the extension `I don't care about cookies` (no Avast)",
-    "description": "Description of the extension."
   },
   "reportSkippedTitle": {
     "message": "Utvidinga er skrudd av på $HOSTNAME$.",
