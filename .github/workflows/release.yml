@@ -5,9 +5,29 @@ name: Release listed
     tags:
       - v*.*.*
       - V*.*.*
+
+# Store-upload steps are gated on BOTH the repo variable AND the matching
+# secret being non-empty. Until those are configured, the workflow still
+# builds the artifacts and drafts a GitHub release — you can upload to the
+# stores manually for the first release, then wire up the secrets/vars to
+# automate subsequent releases.
+#
+# Required GitHub repo settings for full automation:
+#   vars.CHROME_EXTENSION_ID       — your Chrome Web Store extension ID
+#   secrets.CHROME_CLIENT_ID       — Chrome Web Store API client
+#   secrets.CHROME_CLIENT_SECRET   — Chrome Web Store API secret
+#   secrets.CHROME_REFRESH_TOKEN   — Chrome Web Store OAuth refresh token
+#   vars.AMO_LISTING_SLUG          — AMO listing slug (e.g. "crumble")
+#   secrets.AMO_SIGN_KEY           — AMO API JWT issuer
+#   secrets.AMO_SIGN_SECRET        — AMO API JWT secret
+
 jobs:
   release-chrome:
     runs-on: ubuntu-latest
+    # secrets.* can't be referenced in step-level `if`; mirror the readiness
+    # check into a job-level env var that the step can read.
+    env:
+      CHROME_PUBLISH_READY: ${{ vars.CHROME_EXTENSION_ID != '' && secrets.CHROME_CLIENT_ID != '' }}
     steps:
       - uses: actions/checkout@v3
       - name: Stage Chrome manifest
@@ -19,28 +39,31 @@ jobs:
         with:
           name: crumble-chrome
           path: ./src/*
-      # TODO: fill in `extension-id` once the Crumble Chrome Web Store listing
-      # exists. The `secrets.CHROME_*` values also need to be provisioned in
-      # the GitHub repo settings before this step will succeed.
-      - name: Upload & release
-        if: ${{ vars.CHROME_EXTENSION_ID != '' }}
+
+      - name: Upload to Chrome Web Store
+        if: env.CHROME_PUBLISH_READY == 'true'
         uses: mnao305/chrome-extension-upload@v4.0.1
         with:
           file-path: crumble-chrome-source.zip
           extension-id: ${{ vars.CHROME_EXTENSION_ID }}
-          client-id: "${{ secrets.CHROME_CLIENT_ID }}"
-          client-secret: "${{ secrets.CHROME_CLIENT_SECRET }}"
-          refresh-token: "${{ secrets.CHROME_REFRESH_TOKEN }}"
-      - name: Create Release
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+      - name: Create GitHub release
+        if: always()
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
           files: |
             crumble-chrome-source.zip
+
   release-firefox:
     runs-on: ubuntu-latest
+    env:
+      AMO_PUBLISH_READY: ${{ vars.AMO_LISTING_SLUG != '' && secrets.AMO_SIGN_KEY != '' }}
     steps:
       - uses: actions/checkout@v3
       - name: Stage Firefox manifest
@@ -55,47 +78,51 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: crumble-firefox-unsigned
-          path: "${{ steps.web-ext-build.outputs.target }}"
+          path: ${{ steps.web-ext-build.outputs.target }}
       - uses: actions/upload-artifact@v4
         with:
           name: crumble-firefox-source
           path: ./src/*
-      # TODO: AMO signing/publishing requires API keys provisioned as
-      # secrets.AMO_SIGN_KEY / secrets.AMO_SIGN_SECRET. Once the Crumble AMO
-      # listing exists, replace the slug below with the new listing slug.
+
       - name: web-ext sign
-        if: ${{ vars.AMO_LISTING_SLUG != '' }}
+        if: env.AMO_PUBLISH_READY == 'true'
         id: web-ext-sign
         uses: kewisch/action-web-ext@v1
         with:
           cmd: sign
-          source: "${{ steps.web-ext-build.outputs.target }}"
+          source: ${{ steps.web-ext-build.outputs.target }}
           channel: listed
-          apiKey: "${{ secrets.AMO_SIGN_KEY }}"
-          apiSecret: "${{ secrets.AMO_SIGN_SECRET }}"
+          apiKey: ${{ secrets.AMO_SIGN_KEY }}
+          apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
           timeout: 900000
-      - name: Sleep for 15 minutes
-        if: ${{ vars.AMO_LISTING_SLUG != '' }}
+      - name: Wait for AMO processing
+        if: env.AMO_PUBLISH_READY == 'true'
         run: sleep 15m
         shell: bash
-      - name: Download xpi
-        if: ${{ vars.AMO_LISTING_SLUG != '' }}
+      - name: Download signed xpi
+        if: env.AMO_PUBLISH_READY == 'true'
         run: >
           wget
           https://addons.mozilla.org/firefox/downloads/latest/${{ vars.AMO_LISTING_SLUG }}/latest.xpi
           --trust-server-names
       - uses: actions/upload-artifact@v4
-        if: ${{ vars.AMO_LISTING_SLUG != '' }}
+        if: env.AMO_PUBLISH_READY == 'true'
         with:
           name: crumble-firefox-signed
           path: latest.xpi
+
       - name: Rename source xpi
+        if: always()
         run: |
-          mv ${{ steps.web-ext-build.outputs.target }} crumble-firefox-source.zip
-      - name: Create Release
+          if [ -f "${{ steps.web-ext-build.outputs.target }}" ]; then
+            mv "${{ steps.web-ext-build.outputs.target }}" crumble-firefox-source.zip
+          fi
+
+      - name: Create GitHub release
+        if: always()
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
           files: |
