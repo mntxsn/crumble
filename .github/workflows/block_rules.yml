@@ -5,6 +5,11 @@ on:
     branches:
       - master
 
+# create-pull-request needs to push a branch and open the PR.
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   generate-block-rules:
     runs-on: ubuntu-latest
@@ -25,7 +30,7 @@ jobs:
         run: npm run generate-block-rules
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update block rules for Manifest V3

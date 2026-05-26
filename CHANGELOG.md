@@ -5,6 +5,40 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.1]
+
+Post-2.0.0 cleanup pass. No new features; smaller, cleaner, less
+externally-coupled extension.
+
+### Removed
+
+- **Anonymous-report flow.** The old upstream-API path
+  (`api.istilldontcareaboutcookies.com`) is gone. Reports now flow only
+  through GitHub — the Report button opens a pre-filled issue form in
+  a new tab. ~50 lines out of `background.js`, the entire anon-report
+  submenu out of the popup HTML/JS, and 18 obsolete locale keys
+  removed from every `messages.json`.
+- `crowdin.yml` deleted (orphan after the localization workflow was
+  dropped in 2.0.0).
+
+### Changed
+
+- README install section reworded — Crumble is published via GitHub
+  releases; only the Chrome Web Store and AMO listings remain pending.
+- Backup filename: `idcac-backup-*.json` → `crumble-backup-*.json`.
+- Brand-internal renames: debug log prefix `[idcac]` → `[crumble]`,
+  CSS keyframe `idcac-spin` → `crumble-spin`. The functional
+  `class="idcac"` marker used by content scripts to flag
+  already-clicked elements is intentionally unchanged.
+- `tools/README.md` project reference updated.
+- Privacy Policy rewritten: the "Report feature" section now reflects
+  that reports flow through GitHub directly; Crumble itself transmits
+  nothing.
+- `.github/workflows/block_rules.yml`: bumps
+  `peter-evans/create-pull-request@v5` → `@v7` and adds the
+  `contents: write` + `pull-requests: write` permissions the action
+  needs to actually push a branch and open the PR.
+
 ## [2.0.0] — Crumble
 
 Crumble is the rebranded successor to the upstream `I still don't care

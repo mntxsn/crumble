@@ -1,7 +1,7 @@
 {
   "name": "crumble",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Skip cookie consent banners on almost every site you visit.",
   "main": "index.js",
   "scripts": {
