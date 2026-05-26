@@ -198,10 +198,10 @@ label#general_issue_description {
   border: 3px solid var(--border);
   border-top-color: var(--accent);
   border-radius: 50%;
-  animation: idcac-spin 0.8s linear infinite;
+  animation: crumble-spin 0.8s linear infinite;
 }
 
-@keyframes idcac-spin {
+@keyframes crumble-spin {
   to {
     transform: rotate(360deg);
   }

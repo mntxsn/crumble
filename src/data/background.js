@@ -20,7 +20,7 @@ const DEFAULT_SETTINGS = {
 };
 
 function debugLog(...args) {
-  if (settings.debug) console.log("[idcac]", ...args);
+  if (settings.debug) console.log("[crumble]", ...args);
 }
 
 function getSyncFlag() {

@@ -37,14 +37,14 @@ The minimum versions follow from `declarativeNetRequest`'s dynamic-rule support 
 
 ## Install
 
-Store listings will be added once Crumble is published. For now, install manually from a release.
+Until the Chrome Web Store and Firefox Add-ons listings are live, install Crumble manually from the latest GitHub release:
 
 [Latest release →](https://github.com/mntxsn/crumble/releases/latest)
 
-- **Firefox**: download the signed `.xpi` from the release page and drop it on `about:addons`.
-- **Chromium-based browsers**: download the `crumble-chrome-source.zip`, unzip, then load the folder via `chrome://extensions` → _Developer mode_ → _Load unpacked_.
+- **Firefox**: download `crumble.xpi` (or `latest.xpi` once signed) from the release page and drop it on `about:addons`.
+- **Chromium-based browsers**: download `crumble-chrome-source.zip`, unzip, then load the folder via `chrome://extensions` → _Developer mode_ → _Load unpacked_.
 
-Once published, store badges will go here.
+Store badges will appear here once the listings are published.
 
 ## Features
 

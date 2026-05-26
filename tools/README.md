@@ -1,6 +1,6 @@
 # Tools
 
-This folder contains utility scripts for managing the I Still Don't Care About Cookies extension.
+This folder contains utility scripts for managing the Crumble browser extension.
 
 ## Available Tools
 
