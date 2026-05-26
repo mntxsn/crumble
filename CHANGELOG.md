@@ -49,6 +49,10 @@ the new identity, repo, and maintainer.
 - New unit tests cover `resolveLocale` for explicit settings, auto-detect,
   region-subtag stripping, the zh-* family, and the "unknown locale →
   English" fallback. `npm test` now runs 29 tests.
+- **Explicit toolchain & browser requirements**: `package.json` declares
+  `engines.node >= 20`, `.nvmrc` pins the version, and the README has a
+  Compatibility table calling out Firefox 113+ and Chromium 102+ as the
+  supported floor.
 
 ### Modernisation note
 

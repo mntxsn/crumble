@@ -25,6 +25,16 @@ Cookie consent prompts have become unavoidable, intrusive, and rarely actually a
 
 No account, no tracking, no telemetry.
 
+## Compatibility
+
+| Browser | Minimum version |
+| --- | --- |
+| Firefox | 113 |
+| Firefox for Android | 113 |
+| Chrome / Edge / Brave / Opera / Vivaldi | 102 |
+
+The minimum versions follow from `declarativeNetRequest`'s dynamic-rule support (Firefox 113+) and `declarativeNetRequestWithHostAccess` (Chromium 102+). Older Firefox versions can install the last Manifest V2 release from the upstream `I still don't care about cookies` project linked under [Origin & credits](#origin--credits).
+
 ## Install
 
 Store listings will be added once Crumble is published. For now, install manually from a release.

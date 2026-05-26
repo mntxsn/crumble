@@ -49,9 +49,12 @@ tools/
 
 ## Local setup
 
+Crumble's tooling needs Node 20 or newer (see `.nvmrc` / `package.json` `engines`). If you use nvm, `nvm use` picks up the version automatically.
+
 ```bash
 git clone https://github.com/mntxsn/crumble.git
 cd crumble
+nvm use   # optional, but recommended
 npm install
 ```
 
