@@ -1,39 +1,44 @@
-# This workflow will run Crowdin Action that will upload new texts to Crowdin, download the newest translations and create a PR
-# For more information see: https://github.com/crowdin/github-action
+# Sync source strings to Crowdin and pull back translations as a PR.
+# https://github.com/crowdin/github-action
+#
+# Required GitHub repo settings before this is useful:
+#   secrets.CROWDIN_PROJECT_ID       — numeric project ID from Crowdin
+#   secrets.CROWDIN_PERSONAL_TOKEN   — Crowdin personal access token
+#   secrets.GH_TOKEN                 — fine-grained PAT with `contents: write`
+#                                      and `pull-requests: write` for this repo
+#
+# Until those secrets exist the job is skipped, so the workflow stays green.
 
 name: Crowdin Action
 
-# Controls when the action will run.
 on:
   schedule:
-    - cron: "0 */6 * * *" # Every 6 hours - https://crontab.guru/#0_*/6_*_*_*
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
   push:
     branches: [master, feat/setup-crowdin]
 
 jobs:
   synchronize-with-crowdin:
     runs-on: ubuntu-latest
+    # secrets.* aren't allowed in step-level `if`; mirror the readiness
+    # check into a job-level env var.
+    env:
+      CROWDIN_READY: ${{ secrets.CROWDIN_PROJECT_ID != '' && secrets.CROWDIN_PERSONAL_TOKEN != '' }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        if: env.CROWDIN_READY == 'true'
+        uses: actions/checkout@v4
 
       - name: crowdin action
+        if: env.CROWDIN_READY == 'true'
         uses: crowdin/github-action@1.4.16
         with:
-          # Upload sources to Crowdin
           upload_sources: true
-
-          # Upload translations to Crowdin, only use true at initial run
           upload_translations: true
-
-          # Make pull request of Crowdin translations
           download_translations: true
-
-          # To download translations to the specified version branch
           localization_branch_name: l10n_crowdin_translations
-
-          # Create pull request after pushing to branch
           create_pull_request: true
           pull_request_title: "New Crowdin translations"
           pull_request_body: "New Crowdin pull request with translations"
