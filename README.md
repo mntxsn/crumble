@@ -50,7 +50,7 @@ Once published, store badges will go here.
 
 - **Per-domain whitelist** — disable Crumble on individual sites via the toolbar popup
 - **Backup** — download or restore your whitelist as JSON from the options page
-- **Sync** (opt-in) — mirror your whitelist across devices via browser sync
+- **Sync** (opt-in) — mirror your whitelist across devices via browser sync. Requires you to be signed into Firefox Sync or Chrome Sync; without an account, settings stay on the device.
 - **Themes** — auto / light / dark
 - **Languages** — 26 locales bundled, auto-detected from your browser (English as fallback)
 - **Keyboard shortcut** — `Alt+Shift+C` to toggle the current site (rebindable)

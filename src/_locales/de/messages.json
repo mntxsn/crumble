@@ -83,6 +83,11 @@
     "message": "Einstellungen geräteübergreifend synchronisieren",
     "description": "Option text for enabling browser-sync of settings."
   },
+
+  "optionSyncHint": {
+    "message": "Erfordert, dass auf jedem Gerät Firefox Sync oder Chrome Sync angemeldet ist. Ohne Account bleiben die Einstellungen nur auf diesem Gerät.",
+    "description": "Helper text below the sync settings checkbox."
+  },
   "optionTheme": {
     "message": "Design",
     "description": "Label for the theme selector (auto/light/dark)."

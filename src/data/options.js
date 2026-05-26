@@ -138,6 +138,10 @@ function applyTranslations() {
   );
   document.getElementById("debug_label").textContent = t("optionDebug");
   document.getElementById("sync_settings_label").textContent = t("optionSync");
+  document.getElementById("sync_settings_hint").textContent = orDefault(
+    "optionSyncHint",
+    "Requires Firefox Sync or Chrome Sync to be signed in. Without an account, settings only stay on this device."
+  );
   document.getElementById("theme_label").textContent = orDefault(
     "optionTheme",
     "Theme"

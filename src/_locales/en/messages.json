@@ -83,6 +83,11 @@
     "message": "Sync settings across devices",
     "description": "Option text for enabling browser-sync of settings."
   },
+
+  "optionSyncHint": {
+    "message": "Requires Firefox Sync or Chrome Sync to be signed in on every device you want to share with. Without an account, settings stay on this device only.",
+    "description": "Helper text below the sync settings checkbox."
+  },
   "optionTheme": {
     "message": "Theme",
     "description": "Label for the theme selector (auto/light/dark)."

@@ -53,6 +53,12 @@ the new identity, repo, and maintainer.
   `engines.node >= 20`, `.nvmrc` pins the version, and the README has a
   Compatibility table calling out Firefox 113+ and Chromium 102+ as the
   supported floor.
+- **Sync requirement spelled out** in the options page and the README.
+  The toggle now carries a hint that Firefox Sync or Chrome Sync needs
+  to be signed in on every device for the toggle to actually do
+  anything — without that, settings stay on the local device. New
+  `optionSyncHint` locale key (en + de translated; other locales fall
+  back to English).
 
 ### Modernisation note
 
