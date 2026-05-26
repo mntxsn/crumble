@@ -25,9 +25,10 @@ jobs:
   release-chrome:
     runs-on: ubuntu-latest
     # secrets.* can't be referenced in step-level `if`; mirror the readiness
-    # check into a job-level env var that the step can read.
+    # check into a job-level env var that the step can read. "0" is treated
+    # as a placeholder (some setups don't allow truly empty repo variables).
     env:
-      CHROME_PUBLISH_READY: ${{ vars.CHROME_EXTENSION_ID != '' && secrets.CHROME_CLIENT_ID != '' }}
+      CHROME_PUBLISH_READY: ${{ vars.CHROME_EXTENSION_ID != '' && vars.CHROME_EXTENSION_ID != '0' && secrets.CHROME_CLIENT_ID != '' }}
     steps:
       - uses: actions/checkout@v3
       - name: Stage Chrome manifest
@@ -63,7 +64,7 @@ jobs:
   release-firefox:
     runs-on: ubuntu-latest
     env:
-      AMO_PUBLISH_READY: ${{ vars.AMO_LISTING_SLUG != '' && secrets.AMO_SIGN_KEY != '' }}
+      AMO_PUBLISH_READY: ${{ vars.AMO_LISTING_SLUG != '' && vars.AMO_LISTING_SLUG != '0' && secrets.AMO_SIGN_KEY != '' }}
     steps:
       - uses: actions/checkout@v3
       - name: Stage Firefox manifest
