@@ -1,12 +1,13 @@
-# This workflow warns and then closes issues and PRs that have had no activity for a specified amount of time.
-#
-# You can adjust the behavior by modifying this file.
-# For more information, see:
+# Marks (but does not close — `days-before-close: 0` is "never") issues and
+# PRs that have had no activity for ~10 months, so the maintainer can spot
+# long-tail neglect during review.
 # https://github.com/actions/stale
+
 name: Mark stale issues and pull requests
 
 on:
   schedule:
+    - cron: "0 3 * * 0" # Sundays at 03:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -17,7 +18,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/stale@v5
+      - uses: actions/stale@v9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: "Please report again to bump if the site still has a cookie consent banner, sorry for the delay."
