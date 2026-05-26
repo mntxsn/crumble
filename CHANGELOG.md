@@ -5,6 +5,17 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Site rule for `whereby.com`. The cookie banner is a custom-built
+  Framer overlay (not OneTrust/Cookiebot/Didomi), so the CMP-API
+  handler doesn't match. The rule hides the banner footer via
+  `footer:has(a[href="/user/cookie-settings"])`. Requires `:has()`
+  support (Chrome ≥ 105, Firefox ≥ 121); older browsers see the
+  banner unchanged.
+
 ## [2.0.2]
 
 AMO submission unblocker.
