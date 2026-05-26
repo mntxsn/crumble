@@ -21,16 +21,6 @@
     "message": "You have disabled the extension on this website. Please enable it and check if you see the cookie warning before reporting.",
     "description": "Tells the user it cannot report a whitelisted domain."
   },
-  "reportConfirm": {
-    "message": "Would you like to report a cookie warning on $HOSTNAME$?",
-    "description": "Ask for confirmation before reporting a website. Don't use quotes here.",
-    "placeholders": {
-      "hostname": {
-        "content": "$1",
-        "example": "example.com"
-      }
-    }
-  },
   "menuEnable": {
     "message": "Enable extension on $HOSTNAME$",
     "description": "Menu option.",
@@ -51,16 +41,8 @@
       }
     }
   },
-  "menuIdle": {
-    "message": "Extension doesn't work on this website",
-    "description": "Menu option visible when enabling/disabling doesn't work."
-  },
   "menuReport": {
     "message": "Report a cookie warning",
-    "description": "Menu option."
-  },
-  "menuSupport": {
-    "message": "Support this project",
     "description": "Menu option."
   },
   "optionsTitle": {
@@ -83,7 +65,6 @@
     "message": "Sync settings across devices",
     "description": "Option text for enabling browser-sync of settings."
   },
-
   "optionSyncHint": {
     "message": "Requires Firefox Sync or Chrome Sync to be signed in on every device you want to share with. Without an account, settings stay on this device only.",
     "description": "Helper text below the sync settings checkbox."
@@ -96,27 +77,22 @@
     "message": "Language",
     "description": "Label for the language selector in the options page."
   },
-
   "optionLanguageAuto": {
     "message": "Auto (match browser)",
     "description": "Language option: match the browser's UI language, fall back to English."
   },
-
   "popupSupport": {
     "message": "Support Crumble",
     "description": "Title/aria-label for the heart icon in the popup header that links to the GitHub Sponsors page."
   },
-
   "supportHeading": {
     "message": "Support Crumble",
     "description": "Section heading for the support/donate card on the options page."
   },
-
   "supportLead": {
     "message": "If Crumble saves you from clicking through cookie banners, consider sponsoring the project. Sponsorship keeps the project independent and the rules current.",
     "description": "Helper text below the support heading on the options page."
   },
-
   "supportButton": {
     "message": "Sponsor on GitHub",
     "description": "Button text linking to the GitHub Sponsors page."
@@ -184,69 +160,5 @@
   "optionsSaved": {
     "message": "Saved.",
     "description": "Status text after settings were saved."
-  },
-  "reportGithub": {
-    "message": "Report using Github",
-    "description": "Menu item to report using Github"
-  },
-  "reportAnon": {
-    "message": "Report anonymously",
-    "description": "Menu item to report anonymously"
-  },
-  "reportAnonTitle": {
-    "message": "Report",
-    "description": "Translation of 'report' it will be shown like 'Report example.com'"
-  },
-  "reportAnonNotes": {
-    "message": "Notes: ",
-    "description": "Notes for the report"
-  },
-  "reportNotesPlaceholder": {
-    "message": "Things like:\nVideoplayback not working\nBroken scrollbar\ngray overlay",
-    "description": "Placeholder for the notes (\n) is a new line & keep it 4 lines"
-  },
-  "reportAnonSend": {
-    "message": "Send report",
-    "description": "Button to send the report"
-  },
-  "reportAnonCancel": {
-    "message": "Cancel",
-    "description": "Button to cCancel the report"
-  },
-  "genericErrorTitle": {
-    "message": "Something went wrong",
-    "description": "Genereric error title"
-  },
-  "genericErrorTryAgain": {
-    "message": "Try again later..",
-    "description": "Try again later message"
-  },
-  "genericErrorBack": {
-    "message": "Back",
-    "description": "Back button after error"
-  },
-  "menuLoadingText": {
-    "message": "Loading...",
-    "description": "Loading messsage"
-  },
-  "generalIssueOption": {
-    "message": "General issue (requires notes)",
-    "description": "The option text for a general issue"
-  },
-  "scrollbarIssueOption": {
-    "message": "Scrollbar related",
-    "description": "The option text for a scrollbar issue"
-  },
-  "modalIssueOption": {
-    "message": "Modal related",
-    "description": "The option text for a modal issue"
-  },
-  "scrollbarIssueDescription": {
-    "message": "Select this option to signify an issue on this page related to scrolling - like 'the site is not showing a scrollbar'.",
-    "description": "Explanation of what a scrollbar issue is"
-  },
-  "modalIssueDescription": {
-    "message": "Select this option to signify an issue on this page related to a modal - like 'there is a pop-up box blocking interaction'.",
-    "description": "Explanation of what a modal issue is"
   }
 }

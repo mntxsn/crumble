@@ -281,7 +281,7 @@ if (chrome.commands && chrome.commands.onCommand) {
 
 // Reporting
 
-function reportWebsite(info, tab, anon, issueType, notes, callback) {
+function reportWebsite(info, tab, callback) {
   const respond = (payload) => {
     if (typeof callback === "function") callback(payload);
   };
@@ -308,67 +308,18 @@ function reportWebsite(info, tab, anon, issueType, notes, callback) {
     respond({ error: false });
     return;
   }
-  if (!anon) {
-    chrome.tabs.create({
-      url: `https://github.com/mntxsn/crumble/issues/new?labels=Website+request&template=website_request.yml&title=%5BREQ%5D%3A+${encodeURIComponent(
-        hostname
-      )}&url=${encodeURIComponent(hostname)}&version=${encodeURIComponent(
-        chrome.runtime.getManifest().version
-      )}&browser=${encodeURIComponent(getBrowserAndVersion())}`,
-    });
-    respond({ error: false });
-  } else {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-    // TODO(crumble): this still posts to the upstream "I still don't care
-    // about cookies" reporting API while Crumble is in early standalone
-    // release. Replace with a self-hosted endpoint or remove the anonymous
-    // report flow once a decision is made. The GitHub-report path is
-    // unaffected and always available as an alternative.
-    fetch("https://api.istilldontcareaboutcookies.com/api/report", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        issueType,
-        notes,
-        url: hostname,
-        browser: getBrowserAndVersion(),
-        language:
-          navigator.language || Intl.DateTimeFormat().resolvedOptions().locale,
-        extensionVersion: chrome.runtime.getManifest().version,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((response) => {
-        if (
-          response &&
-          !response.error &&
-          !response.errors &&
-          response.responseURL
-        ) {
-          chrome.tabs.create({
-            url: response.responseURL,
-          });
-          respond({ error: false });
-        } else {
-          respond({ error: true });
-        }
-      })
-      .catch((err) => {
-        console.error("Report submission failed:", err);
-        respond({ error: true });
-      })
-      .finally(() => clearTimeout(timeoutId));
-  }
+  // Open the pre-filled GitHub issue form. This is the only reporting path —
+  // the anonymous-API flow was removed before the 2.0.0 standalone release
+  // to drop the dependency on the upstream reporting backend.
+  chrome.tabs.create({
+    url: `https://github.com/mntxsn/crumble/issues/new?labels=Website+request&template=website_request.yml&title=%5BREQ%5D%3A+${encodeURIComponent(
+      hostname
+    )}&url=${encodeURIComponent(hostname)}&version=${encodeURIComponent(
+      chrome.runtime.getManifest().version
+    )}&browser=${encodeURIComponent(getBrowserAndVersion())}`,
+  });
+  respond({ error: false });
 }
 
 function getBrowserAndVersion() {
@@ -559,14 +510,7 @@ chrome.runtime.onMessage.addListener((request, info, sendResponse) => {
             .catch((err) => console.error("Toggle failed:", err))
             .finally(() => sendResponse());
         } else if (request.command == "report_website") {
-          reportWebsite(
-            info,
-            tabList[request.tabId],
-            request.anon,
-            request.issueType,
-            request.notes,
-            sendResponse
-          );
+          reportWebsite(info, tabList[request.tabId], sendResponse);
           responseSend = true;
         } else if (request.command == "refresh_page") {
           chrome.tabs.reload(request.tabId);

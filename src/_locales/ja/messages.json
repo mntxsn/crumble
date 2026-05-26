@@ -17,16 +17,6 @@
     "message": "このウェブサイトでの拡張機能をあなたは無効にしています。有効化し、クッキー警告が出るか、バグ報告の前に確認してください。",
     "description": "Tells the user it cannot report a whitelisted domain."
   },
-  "reportConfirm": {
-    "message": "$HOSTNAME$ でクッキー警告を出したいですか?",
-    "description": "Ask for confirmation before reporting a website. Don't use quotes here.",
-    "placeholders": {
-      "hostname": {
-        "content": "$1",
-        "example": "example.com"
-      }
-    }
-  },
   "menuEnable": {
     "message": "$HOSTNAME$ で拡張を有効にします",
     "description": "Menu option.",
@@ -47,16 +37,8 @@
       }
     }
   },
-  "menuIdle": {
-    "message": "拡張はこのサイトで動きません",
-    "description": "Menu option visible when enabling/disabling doesn't work."
-  },
   "menuReport": {
     "message": "クッキー警告を報告する",
-    "description": "Menu option."
-  },
-  "menuSupport": {
-    "message": "プロジェクトを支援したい",
     "description": "Menu option."
   },
   "optionsTitle": {

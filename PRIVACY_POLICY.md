@@ -14,21 +14,15 @@ We value your privacy and collect as little data as possible.
   During normal operation Crumble does **not** collect, store, or share any personal or identifiable information. All processing happens locally inside your browser.
 
 - **"Report" feature**
-  When you choose to submit a report through the popup, Crumble sends only the following minimal, non-personal data to the reporting endpoint:
-  - The **hostname** of the website you reported
-  - The **browser used** (e.g. Chrome, Firefox)
-  - The **version of the extension**
-  - Any **notes you voluntarily add** to the report
+  Crumble's "Report" button opens a pre-filled GitHub issue form in a new browser tab. The extension itself does not transmit any data — submitting the issue is your direct interaction with GitHub, and follows GitHub's terms and privacy policy. The pre-filled form includes only the website's hostname, the extension version, and the browser type, which you can edit or remove before submitting.
 
-  No IP addresses, browsing history, or personal identifiers are collected or stored.
-
-  > **Note**: while Crumble is in early standalone release the reporting endpoint may be temporarily routed through the upstream `I still don't care about cookies` API or hosted by the Crumble maintainer. This will be updated here transparently. If you want zero report data leaving your machine, use the "GitHub" reporting path instead — it just opens a pre-filled issue form in your browser.
+  Crumble has no other reporting endpoint. The anonymous-API path used by the upstream project before Crumble 2.0 is gone.
 
 ## Data storage
 
-Reports submitted through the "Report" feature may be published as GitHub issues in the public Crumble repository. Anything you include in your notes becomes publicly visible once published.
+Reports submitted via GitHub become public GitHub issues in the Crumble repository. Anything you include in the issue becomes publicly visible once published — handle accordingly.
 
-If you'd like a report or part of it removed or redacted, contact the maintainer (details below). Crumble maintainers will make a reasonable effort to delete or anonymise relevant data.
+If you'd like a report or part of it removed or redacted, contact the maintainer (details below). Crumble maintainers will make a reasonable effort to delete or anonymise relevant data within GitHub's data-retention constraints.
 
 We do not sell, share, or otherwise disclose reported information to third parties for marketing, analytics, or unrelated purposes.
 

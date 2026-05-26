@@ -30,6 +30,36 @@ the new identity, repo, and maintainer.
 - **Logo**: the modernised flat-cookie icon introduced during the
   refactor is kept. SVG source at `src/icons/logo.svg`.
 
+### Post-2.0.0 cleanup
+
+- **Anonymous-report flow removed.** Crumble no longer posts to the
+  upstream `api.istilldontcareaboutcookies.com` reporting backend; that
+  dependency is gone. The only reporting path is now the GitHub issue
+  form (opened pre-filled in a new tab from the popup's Report button).
+  All related UI was removed: the `menu_report`, `menu_report_anon`,
+  `menu_error`, and `menu_loading` sub-views; the issue-type selector;
+  the notes textarea; the AbortController + fetch + retry/error logic
+  in `background.js`. `reportWebsite` collapsed from ~80 lines to ~30.
+  Locale keys related to anon report (`reportAnon*`, `reportNotes*`,
+  `*IssueOption`, `*IssueDescription`, `menuLoadingText`,
+  `genericError*`, `reportGithub`, `menuIdle`, `menuSupport`,
+  `reportConfirm`) deleted from all 26 locale files. Privacy Policy
+  updated accordingly.
+- README install section reworded — Crumble is now published via
+  GitHub releases; only the Chrome Web Store and AMO listings remain
+  pending.
+- Backup filename `idcac-backup-*.json` renamed to
+  `crumble-backup-*.json`.
+- `crowdin.yml` deleted (orphan after the localization workflow was
+  dropped).
+- Brand-internal renames: debug log prefix `[idcac]` → `[crumble]`,
+  CSS keyframe `idcac-spin` → `crumble-spin`. The functional
+  `class="idcac"` marker that content scripts use to flag
+  already-clicked elements was intentionally NOT renamed — it's
+  referenced by thousands of selectors in `common.css` and the
+  per-vendor rules; renaming it has no user-visible benefit and high
+  refactor risk.
+
 ### Pre-release polish (still 2.0.0)
 
 - **Language now auto-detects on first install.** `settings.language`

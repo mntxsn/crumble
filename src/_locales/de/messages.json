@@ -21,16 +21,6 @@
     "message": "Sie haben die Erweiterung auf dieser Website deaktiviert. Bitte aktivieren Sie es und prüfen Sie, ob Sie die Cookie-Warnung weiterhin sehen, bevor Sie Bericht melden.",
     "description": "Tells the user it cannot report a whitelisted domain."
   },
-  "reportConfirm": {
-    "message": "Möchten Sie eine Cookie-Warnung auf der $HOSTNAME$ melden?",
-    "description": "Ask for confirmation before reporting a website. Don't use quotes here.",
-    "placeholders": {
-      "hostname": {
-        "content": "$1",
-        "example": "example.com"
-      }
-    }
-  },
   "menuEnable": {
     "message": "Aktiviere die Erweiterung für $HOSTNAME$",
     "description": "Menu option.",
@@ -51,16 +41,8 @@
       }
     }
   },
-  "menuIdle": {
-    "message": "Die Erweiterung funktioniert nicht auf dieser Website.",
-    "description": "Menu option visible when enabling/disabling doesn't work."
-  },
   "menuReport": {
     "message": "Melde eine Cookie-Warnung",
-    "description": "Menu option."
-  },
-  "menuSupport": {
-    "message": "Unterstütze dieses Projekt",
     "description": "Menu option."
   },
   "optionsTitle": {
@@ -83,7 +65,6 @@
     "message": "Einstellungen geräteübergreifend synchronisieren",
     "description": "Option text for enabling browser-sync of settings."
   },
-
   "optionSyncHint": {
     "message": "Erfordert, dass auf jedem Gerät Firefox Sync oder Chrome Sync angemeldet ist. Ohne Account bleiben die Einstellungen nur auf diesem Gerät.",
     "description": "Helper text below the sync settings checkbox."
@@ -108,27 +89,22 @@
     "message": "Sprache",
     "description": "Label for the language selector in the options page."
   },
-
   "optionLanguageAuto": {
     "message": "Automatisch (Browser folgen)",
     "description": "Language option: match the browser's UI language, fall back to English."
   },
-
   "popupSupport": {
     "message": "Crumble unterstützen",
     "description": "Title/aria-label for the heart icon in the popup header that links to the GitHub Sponsors page."
   },
-
   "supportHeading": {
     "message": "Crumble unterstützen",
     "description": "Section heading for the support/donate card on the options page."
   },
-
   "supportLead": {
     "message": "Wenn Crumble dir das Wegklicken von Cookie-Bannern abnimmt, erwäge das Projekt zu sponsorn. Spenden halten das Projekt unabhängig und die Regeln aktuell.",
     "description": "Helper text below the support heading on the options page."
   },
-
   "supportButton": {
     "message": "Auf GitHub sponsern",
     "description": "Button text linking to the GitHub Sponsors page."
@@ -184,69 +160,5 @@
   "optionsButton": {
     "message": "Einstellungen speichern",
     "description": "Options text for SAVE button."
-  },
-  "reportGithub": {
-    "message": "Über Github melden",
-    "description": "Menu item to report using Github"
-  },
-  "reportAnon": {
-    "message": "Anonym melden",
-    "description": "Menu item to report anonymously"
-  },
-  "reportAnonTitle": {
-    "message": "Melde",
-    "description": "Translation of 'report' it will be shown like 'Report example.com'"
-  },
-  "reportAnonNotes": {
-    "message": "Anmerkungen: ",
-    "description": "Notes for the report"
-  },
-  "reportNotesPlaceholder": {
-    "message": "Dinge wie:\nVideowiedergabe funktioniert nicht\nNicht funktionierende Bildlaufleiste\nSeite hat Grauschleier",
-    "description": "Placeholder for the notes (\n) is a new line & keep it 4 lines"
-  },
-  "reportAnonSend": {
-    "message": "Bericht senden",
-    "description": "Button to send the report"
-  },
-  "reportAnonCancel": {
-    "message": "Abbrechen",
-    "description": "Button to cCancel the report"
-  },
-  "genericErrorTitle": {
-    "message": "Etwas ist schiefgelaufen",
-    "description": "Genereric error title"
-  },
-  "genericErrorTryAgain": {
-    "message": "Versuchen Sie es später noch einmal..",
-    "description": "Try again later message"
-  },
-  "genericErrorBack": {
-    "message": "Zurück",
-    "description": "Back button after error"
-  },
-  "menuLoadingText": {
-    "message": "Laden…",
-    "description": "Loading messsage"
-  },
-  "generalIssueOption": {
-    "message": "Allgemeines Problem (erfordert Anmerkungen)",
-    "description": "The option text for a general issue"
-  },
-  "scrollbarIssueOption": {
-    "message": "Auf (die) Scrollbar bezogen",
-    "description": "The option text for a scrollbar issue"
-  },
-  "modalIssueOption": {
-    "message": "Modal bezogen",
-    "description": "The option text for a modal issue"
-  },
-  "scrollbarIssueDescription": {
-    "message": "Wählen Sie diese Option, um ein Problem auf dieser Seite im Zusammenhang mit dem Scrollen zu kennzeichnen - wie zum Beispiel \"die Seite zeigt keine Scrollleiste\".",
-    "description": "Explanation of what a scrollbar issue is"
-  },
-  "modalIssueDescription": {
-    "message": "Wählen Sie diese Option, um ein Problem auf dieser Seite im Zusammenhang mit einem Modal zu kennzeichnen - wie \"es gibt eine Pop-Up-Box, die die Interaktion blockiert\".",
-    "description": "Explanation of what a modal issue is"
   }
 }
