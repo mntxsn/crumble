@@ -61,9 +61,9 @@ Store badges will appear here once the listings are published.
 
 1. Make sure no other privacy or ad-blocker extension is interfering.
 2. Try the page in a clean profile — broken sites are sometimes broken by unrelated extensions.
-3. If it really is us, use the **Report** button in the popup:
-   - **GitHub** opens a pre-filled issue template.
-   - **Anonymous** sends a short report to a small reporting API (no personal data).
+3. If it really is Crumble, the popup's **Report** button opens a pre-filled GitHub issue form in a new tab. Your browser submits to GitHub directly; Crumble itself sends nothing.
+
+For non-site-specific problems (popup not opening, install issues, …) use the [Help / question template](https://github.com/mntxsn/crumble/issues/new?template=help.yml).
 
 ## Development
 
