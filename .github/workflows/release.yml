@@ -6,6 +6,11 @@ name: Release listed
       - v*.*.*
       - V*.*.*
 
+# Drafting a GitHub release requires write access to repo contents. The
+# default GITHUB_TOKEN is read-only since 2023.
+permissions:
+  contents: write
+
 # Store-upload steps are gated on BOTH the repo variable AND the matching
 # secret being non-empty. Until those are configured, the workflow still
 # builds the artifacts and drafts a GitHub release — you can upload to the
@@ -30,7 +35,7 @@ jobs:
     env:
       CHROME_PUBLISH_READY: ${{ vars.CHROME_EXTENSION_ID != '' && vars.CHROME_EXTENSION_ID != '0' && secrets.CHROME_CLIENT_ID != '' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Stage Chrome manifest
         run: cp src/manifest.chrome.json src/manifest.json
       - name: Archive Release
@@ -53,7 +58,7 @@ jobs:
 
       - name: Create GitHub release
         if: always()
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -66,7 +71,7 @@ jobs:
     env:
       AMO_PUBLISH_READY: ${{ vars.AMO_LISTING_SLUG != '' && vars.AMO_LISTING_SLUG != '0' && secrets.AMO_SIGN_KEY != '' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Stage Firefox manifest
         run: cp src/manifest.firefox.json src/manifest.json
       - name: web-ext build
@@ -121,7 +126,7 @@ jobs:
 
       - name: Create GitHub release
         if: always()
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
