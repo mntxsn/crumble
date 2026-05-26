@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 560" width="1400" height="560">
+  <!-- Dark navy background -->
+  <rect width="1400" height="560" fill="#0f1115"/>
+
+  <!-- Subtle vertical accent on the left edge -->
+  <rect x="0" y="0" width="6" height="560" fill="#3b82f6"/>
+
+  <!-- Cookie logo, centered vertically on the left -->
+  <svg x="100" y="140" width="280" height="280" viewBox="0 0 128 128">
+    <defs>
+      <mask id="bite">
+        <rect width="128" height="128" fill="white"/>
+        <circle cx="108" cy="30" r="20" fill="black"/>
+      </mask>
+    </defs>
+    <g mask="url(#bite)">
+      <circle cx="64" cy="64" r="52" fill="#c89263"/>
+      <ellipse cx="48" cy="38" rx="20" ry="10" fill="#dab18e" opacity="0.45"/>
+      <circle cx="40" cy="50" r="6" fill="#3d2817"/>
+      <circle cx="74" cy="46" r="5" fill="#3d2817"/>
+      <circle cx="52" cy="78" r="6" fill="#3d2817"/>
+      <circle cx="84" cy="74" r="5" fill="#3d2817"/>
+      <circle cx="32" cy="84" r="4" fill="#3d2817"/>
+      <circle cx="66" cy="98" r="5" fill="#3d2817"/>
+      <circle cx="96" cy="56" r="4" fill="#3d2817"/>
+    </g>
+  </svg>
+
+  <!-- Brand name -->
+  <text x="450" y="220" font-family="Helvetica, Arial, sans-serif"
+        font-size="92" font-weight="700" fill="#f3f4f6">Crumble</text>
+
+  <!-- Tagline -->
+  <text x="454" y="270" font-family="Helvetica, Arial, sans-serif"
+        font-size="28" fill="#9ca3af">Skip cookie consent banners on almost every site.</text>
+
+  <!-- Divider line -->
+  <rect x="454" y="300" width="320" height="2" fill="#2d3138"/>
+
+  <!-- Feature bullets -->
+  <g font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#d1d5db">
+    <text x="454" y="358">
+      <tspan fill="#3b82f6" font-weight="700">✓</tspan>
+      <tspan dx="14">Auto-dismisses banners across thousands of websites</tspan>
+    </text>
+    <text x="454" y="402">
+      <tspan fill="#3b82f6" font-weight="700">✓</tspan>
+      <tspan dx="14">Direct CMP integration — OneTrust, Cookiebot, Didomi, TrustArc</tspan>
+    </text>
+    <text x="454" y="446">
+      <tspan fill="#3b82f6" font-weight="700">✓</tspan>
+      <tspan dx="14">Open-source · GPL-3.0 · No telemetry · No accounts</tspan>
+    </text>
+  </g>
+</svg>

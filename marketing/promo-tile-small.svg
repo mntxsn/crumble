@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 280" width="440" height="280">
+  <!-- Dark navy background -->
+  <rect width="440" height="280" fill="#0f1115"/>
+
+  <!-- Cookie logo -->
+  <svg x="30" y="75" width="130" height="130" viewBox="0 0 128 128">
+    <defs>
+      <mask id="bite">
+        <rect width="128" height="128" fill="white"/>
+        <circle cx="108" cy="30" r="20" fill="black"/>
+      </mask>
+    </defs>
+    <g mask="url(#bite)">
+      <circle cx="64" cy="64" r="52" fill="#c89263"/>
+      <ellipse cx="48" cy="38" rx="20" ry="10" fill="#dab18e" opacity="0.45"/>
+      <circle cx="40" cy="50" r="6" fill="#3d2817"/>
+      <circle cx="74" cy="46" r="5" fill="#3d2817"/>
+      <circle cx="52" cy="78" r="6" fill="#3d2817"/>
+      <circle cx="84" cy="74" r="5" fill="#3d2817"/>
+      <circle cx="32" cy="84" r="4" fill="#3d2817"/>
+      <circle cx="66" cy="98" r="5" fill="#3d2817"/>
+      <circle cx="96" cy="56" r="4" fill="#3d2817"/>
+    </g>
+  </svg>
+
+  <!-- Brand name -->
+  <text x="180" y="130" font-family="Helvetica, Arial, sans-serif"
+        font-size="44" font-weight="700" fill="#f3f4f6">Crumble</text>
+
+  <!-- Tagline -->
+  <text x="182" y="160" font-family="Helvetica, Arial, sans-serif"
+        font-size="17" fill="#9ca3af">Skip cookie banners.</text>
+
+  <!-- Accent label -->
+  <text x="182" y="200" font-family="Helvetica, Arial, sans-serif"
+        font-size="10" font-weight="700" fill="#60a5fa" letter-spacing="1.5">OPEN-SOURCE · NO TELEMETRY</text>
+</svg>
