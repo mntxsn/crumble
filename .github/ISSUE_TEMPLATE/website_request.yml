@@ -31,8 +31,8 @@ body:
     attributes:
       label: Version
       description: What version of our software are you running?
-      value: 2.0.0
-      placeholder: 2.0.0
+      value: 2.0.2
+      placeholder: 2.0.2
     validations:
       required: true
 

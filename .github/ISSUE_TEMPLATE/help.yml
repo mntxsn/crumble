@@ -1,0 +1,95 @@
+name: Help / question
+description: Ask for help or report a problem that isn't a website-specific request.
+title: "[Help]: "
+labels: ["help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out. Before opening this issue, please check:
+
+        - Have you tried disabling other privacy/ad-blocking extensions to rule out conflicts?
+        - Have you tried in a clean browser profile?
+        - Have you searched [existing issues](https://github.com/mntxsn/crumble/issues?q=is%3Aissue)?
+
+        If the issue is specifically "Cookie banner still showing on `example.com`", please use the **Website request** template instead.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What are you trying to do?
+      description: Describe the problem from your perspective.
+      placeholder: e.g. "I installed Crumble but the popup doesn't open."
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happens
+    attributes:
+      label: What happens instead?
+      description: Including any error messages you've seen.
+      placeholder: e.g. "Clicking the toolbar icon does nothing."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Firefox
+        - Firefox for Android
+        - Chrome
+        - Edge
+        - Brave
+        - Opera
+        - Vivaldi
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: input
+    id: browser_version
+    attributes:
+      label: Browser version
+      description: e.g. "Firefox 128.0", "Chrome 131.0.6778.86"
+    validations:
+      required: true
+
+  - type: input
+    id: extension_version
+    attributes:
+      label: Crumble version
+      description: Visible in `about:addons` (Firefox) or `chrome://extensions` (Chromium).
+      placeholder: 2.0.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: other_extensions
+    attributes:
+      label: Other privacy / ad-blocker extensions installed?
+      options:
+        - "No, only Crumble"
+        - "Yes (please list in description)"
+        - "Tested in a clean profile — issue persists"
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output (optional)
+      description: |
+        If you can, enable Crumble's debug logging in the options page, reproduce the problem, then copy the relevant output from the service-worker console (Chromium: `chrome://extensions` → "Service worker" link, Firefox: `about:debugging` → Inspect).
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else?
+      description: Screenshots, screen recordings, additional context.
+    validations:
+      required: false
