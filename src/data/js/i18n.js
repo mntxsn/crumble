@@ -153,20 +153,23 @@ export function applyPlaceholders(message, entry, substitutions) {
  * @returns {Promise<{t: (key: string, subs?: any) => string, locale: string}>}
  */
 export async function buildTranslator(locale) {
-  const requested = AVAILABLE_LOCALES.includes(locale) ? locale : DEFAULT_LOCALE;
+  const requested = AVAILABLE_LOCALES.includes(locale)
+    ? locale
+    : DEFAULT_LOCALE;
 
   // Load both the requested locale and English. English serves as the
   // fallback for any key not yet translated.
   const [primary, fallback] = await Promise.all([
     fetchLocale(requested),
-    requested === DEFAULT_LOCALE ? Promise.resolve(null) : fetchLocale(DEFAULT_LOCALE),
+    requested === DEFAULT_LOCALE
+      ? Promise.resolve(null)
+      : fetchLocale(DEFAULT_LOCALE),
   ]);
 
   const fb = fallback || (requested === DEFAULT_LOCALE ? primary : null);
 
   function t(key, subs) {
-    const entry =
-      (primary && primary[key]) || (fb && fb[key]) || null;
+    const entry = (primary && primary[key]) || (fb && fb[key]) || null;
     if (!entry) return "";
     return applyPlaceholders(entry.message || "", entry, subs);
   }

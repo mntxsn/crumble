@@ -46,7 +46,10 @@ test("getHostname strips www-prefix when cleanup is truthy", () => {
 });
 
 test("getHostname leaves non-www subdomains alone", () => {
-  assert.equal(getHostname("https://shop.example.com", true), "shop.example.com");
+  assert.equal(
+    getHostname("https://shop.example.com", true),
+    "shop.example.com"
+  );
   assert.equal(getHostname("https://api.example.org", true), "api.example.org");
 });
 

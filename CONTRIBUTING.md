@@ -87,15 +87,15 @@ After loading, pin the toolbar icon for easier testing.
 
 ## The day-to-day commands
 
-| Command | What it does |
-|---|---|
-| `npm test` | Run the unit tests under `test/` (Node's built-in test runner — no extra deps) |
-| `npm run lint` | ESLint over `src/` and `tools/` |
-| `npm run lintfix` | ESLint with autofix |
-| `npm run prettier` | Format the whole tree |
-| `npm run prettier-check` | Verify formatting without writing |
-| `npm run add-rule -- --domain example.com --css "…"` | Add or replace a site rule (see below) |
-| `npm run generate-block-rules` | Regenerate `src/rules.json` from `blockUrls` in `rules.js` |
+| Command                                              | What it does                                                                   |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `npm test`                                           | Run the unit tests under `test/` (Node's built-in test runner — no extra deps) |
+| `npm run lint`                                       | ESLint over `src/` and `tools/`                                                |
+| `npm run lintfix`                                    | ESLint with autofix                                                            |
+| `npm run prettier`                                   | Format the whole tree                                                          |
+| `npm run prettier-check`                             | Verify formatting without writing                                              |
+| `npm run add-rule -- --domain example.com --css "…"` | Add or replace a site rule (see below)                                         |
+| `npm run generate-block-rules`                       | Regenerate `src/rules.json` from `blockUrls` in `rules.js`                     |
 
 CI runs `lint`, `prettier-check`, and `test` on every PR — make sure all three pass locally before requesting review.
 

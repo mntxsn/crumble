@@ -20,11 +20,9 @@ test("applyPlaceholders substitutes a single $NAME$ token", () => {
       hostname: { content: "$1", example: "example.com" },
     },
   };
-  const out = applyPlaceholders(
-    "Enable extension on $HOSTNAME$",
-    entry,
-    ["example.com"]
-  );
+  const out = applyPlaceholders("Enable extension on $HOSTNAME$", entry, [
+    "example.com",
+  ]);
   assert.equal(out, "Enable extension on example.com");
 });
 
@@ -37,14 +35,8 @@ test("applyPlaceholders accepts a single substitution (not array)", () => {
 
 test("applyPlaceholders is case-insensitive on token name", () => {
   const entry = { placeholders: { Hostname: { content: "$1" } } };
-  assert.equal(
-    applyPlaceholders("$hostname$", entry, ["x.com"]),
-    "x.com"
-  );
-  assert.equal(
-    applyPlaceholders("$HOSTNAME$", entry, ["x.com"]),
-    "x.com"
-  );
+  assert.equal(applyPlaceholders("$hostname$", entry, ["x.com"]), "x.com");
+  assert.equal(applyPlaceholders("$HOSTNAME$", entry, ["x.com"]), "x.com");
 });
 
 test("applyPlaceholders leaves message unchanged when substitution missing", () => {

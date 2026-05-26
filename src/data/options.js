@@ -316,18 +316,14 @@ async function init() {
 
   document.getElementById("save").addEventListener("click", saveOptions);
   document.getElementById("export").addEventListener("click", exportSettings);
-  document
-    .getElementById("import_trigger")
-    .addEventListener("click", () => {
-      document.getElementById("import_file").click();
-    });
-  document
-    .getElementById("import_file")
-    .addEventListener("change", (event) => {
-      const file = event.target.files && event.target.files[0];
-      if (file) importSettings(file);
-      event.target.value = "";
-    });
+  document.getElementById("import_trigger").addEventListener("click", () => {
+    document.getElementById("import_file").click();
+  });
+  document.getElementById("import_file").addEventListener("change", (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (file) importSettings(file);
+    event.target.value = "";
+  });
   // Live language preview: switch UI text the moment the user picks a new
   // language, even before they hit Save.
   document.getElementById("language").addEventListener("change", (event) => {

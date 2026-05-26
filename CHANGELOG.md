@@ -47,7 +47,7 @@ the new identity, repo, and maintainer.
   `supportLead`, `supportButton` (en + de translated; others fall back
   to English via the i18n loader).
 - New unit tests cover `resolveLocale` for explicit settings, auto-detect,
-  region-subtag stripping, the zh-* family, and the "unknown locale →
+  region-subtag stripping, the zh-\* family, and the "unknown locale →
   English" fallback. `npm test` now runs 29 tests.
 - **Explicit toolchain & browser requirements**: `package.json` declares
   `engines.node >= 20`, `.nvmrc` pins the version, and the README has a
@@ -257,4 +257,3 @@ final pre-release sprint.
 - Removed the obsolete `gecko_android.id` field from `manifest_v2.json` —
   the field isn't allowed there and triggered a Firefox manifest warning
   on every load. The extension ID continues to come from `gecko.id`.
-

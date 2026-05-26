@@ -600,7 +600,8 @@
 
           timeoutDuration += 100;
         }
-      });
+      }
+    );
   }
 
   function searchLoop(counter) {

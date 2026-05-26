@@ -3,7 +3,9 @@
 
 (function () {
   const classname =
-    Math.random().toString(36).replace(/[^a-z]+/g, "") || "idcac";
+    Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, "") || "idcac";
 
   const l = document.location;
   let isAudioboom = false;
