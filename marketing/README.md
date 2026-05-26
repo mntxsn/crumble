@@ -2,10 +2,10 @@
 
 Source SVGs for the Chrome Web Store and AMO listing imagery.
 
-| File | Size | Where it's used |
-| --- | --- | --- |
-| `promo-tile-small.svg` | 440 × 280 | Chrome Web Store "small promo tile" (shown in search results and recommendations) |
-| `promo-tile-marquee.svg` | 1400 × 560 | Chrome Web Store "marquee promo tile" (hero placement on featured pages) |
+| File                     | Size       | Where it's used                                                                   |
+| ------------------------ | ---------- | --------------------------------------------------------------------------------- |
+| `promo-tile-small.svg`   | 440 × 280  | Chrome Web Store "small promo tile" (shown in search results and recommendations) |
+| `promo-tile-marquee.svg` | 1400 × 560 | Chrome Web Store "marquee promo tile" (hero placement on featured pages)          |
 
 The store wants PNGs at the exact pixel sizes. Render with `rsvg-convert`:
 
