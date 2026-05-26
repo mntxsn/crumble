@@ -5,6 +5,23 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.2]
+
+AMO submission unblocker.
+
+### Added
+
+- `browser_specific_settings.gecko.data_collection_permissions` set to
+  `{ "required": ["none"] }` in the Firefox manifest. Mozilla started
+  requiring this field for AMO submissions in late 2024 — without it
+  the upload fails with `The "data_collection_permissions" property is
+missing.` Crumble collects nothing (no telemetry, no analytics; the
+  anonymous-report API path was removed in 2.0.1, and the GitHub
+  report flow is a user-initiated tab open), so `"none"` is the
+  honest declaration. AMO surfaces this on the listing page so users
+  can see at a glance what the extension does (and doesn't do) with
+  their data.
+
 ## [2.0.1]
 
 Post-2.0.0 cleanup pass. No new features; smaller, cleaner, less
