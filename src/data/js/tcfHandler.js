@@ -1,7 +1,13 @@
 /*  CMP API handler */
-/*  Detects major Consent Management Platforms and dismisses them via their
-    published JS API (more reliable than DOM-clicking selectors). Runs
-    silently if no known CMP is present. */
+/*  Detects Consent Management Platforms and dismisses them via their
+    published JS API (more reliable than DOM-clicking selectors). Covers
+    OneTrust, Cookiebot, Didomi, TrustArc, Usercentrics, Cookie-Script,
+    Complianz, Klaro, Osano, iubenda, Cookie Information, consentmanager,
+    and Tarteaucitron. Runs silently if no known CMP is present.
+
+    Adapters are reject/deny-all where the API offers it (privacy-first).
+    They only run on non-whitelisted tabs (the background never injects this
+    handler on a whitelisted site), so re-applying a reject is always safe. */
 
 (function () {
   // Each entry: name + a function that attempts a reject-all-style dismiss.
@@ -75,6 +81,143 @@
           } catch {
             return false;
           }
+        }
+        return false;
+      },
+    },
+    {
+      name: "Usercentrics",
+      try: () => {
+        // Usercentrics Browser SDK (v2) exposes UC_UI once initialised.
+        if (
+          typeof window.UC_UI === "object" &&
+          typeof window.UC_UI.denyAllConsents === "function" &&
+          (typeof window.UC_UI.isInitialized !== "function" ||
+            window.UC_UI.isInitialized())
+        ) {
+          window.UC_UI.denyAllConsents();
+          return true;
+        }
+        return false;
+      },
+    },
+    {
+      name: "Cookie-Script",
+      try: () => {
+        if (
+          typeof window.CookieScript === "object" &&
+          window.CookieScript.instance &&
+          typeof window.CookieScript.instance.reject === "function"
+        ) {
+          window.CookieScript.instance.reject();
+          return true;
+        }
+        return false;
+      },
+    },
+    {
+      name: "Complianz",
+      try: () => {
+        // Complianz (WordPress) exposes a global deny-all helper.
+        if (typeof window.cmplz_deny_all === "function") {
+          window.cmplz_deny_all();
+          return true;
+        }
+        return false;
+      },
+    },
+    {
+      name: "Klaro",
+      try: () => {
+        if (
+          typeof window.klaro === "object" &&
+          typeof window.klaro.getManager === "function"
+        ) {
+          const mgr = window.klaro.getManager();
+          if (mgr && typeof mgr.changeAll === "function") {
+            mgr.changeAll(false);
+            if (typeof mgr.saveAndApplyConsents === "function") {
+              mgr.saveAndApplyConsents();
+            }
+            return true;
+          }
+        }
+        return false;
+      },
+    },
+    {
+      name: "Osano",
+      try: () => {
+        if (
+          typeof window.Osano === "object" &&
+          window.Osano.cm &&
+          typeof window.Osano.cm.denyAll === "function"
+        ) {
+          window.Osano.cm.denyAll();
+          return true;
+        }
+        return false;
+      },
+    },
+    {
+      name: "iubenda",
+      try: () => {
+        if (
+          typeof window._iub === "object" &&
+          window._iub.cs &&
+          window._iub.cs.api &&
+          typeof window._iub.cs.api.reject === "function"
+        ) {
+          window._iub.cs.api.reject();
+          return true;
+        }
+        return false;
+      },
+    },
+    {
+      name: "CookieInformation",
+      try: () => {
+        if (
+          typeof window.CookieInformation === "object" &&
+          typeof window.CookieInformation.declineAllCategories === "function"
+        ) {
+          window.CookieInformation.declineAllCategories();
+          return true;
+        }
+        return false;
+      },
+    },
+    {
+      name: "consentmanager",
+      try: () => {
+        // consentmanager.net stub. Guarded against the legacy TCF v1 __cmp,
+        // which has a different signature — we only call when the
+        // consentmanager-specific globals are present.
+        if (
+          typeof window.__cmp === "function" &&
+          (typeof window.cmp_id !== "undefined" ||
+            typeof window.cmpgvldata !== "undefined")
+        ) {
+          try {
+            window.__cmp("setConsent", 0);
+            return true;
+          } catch {
+            return false;
+          }
+        }
+        return false;
+      },
+    },
+    {
+      name: "Tarteaucitron",
+      try: () => {
+        if (
+          typeof window.tarteaucitron === "object" &&
+          window.tarteaucitron.userInterface &&
+          typeof window.tarteaucitron.userInterface.respondAll === "function"
+        ) {
+          window.tarteaucitron.userInterface.respondAll(false);
+          return true;
         }
         return false;
       },
