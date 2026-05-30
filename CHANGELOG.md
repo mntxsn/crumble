@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **Nine more CMP API adapters** in the consent-API handler: Usercentrics,
+  Cookie-Script, Complianz, Klaro, Osano, iubenda, Cookie Information,
+  consentmanager, and Tarteaucitron (up from 5 to 14). Each calls the
+  vendor's documented reject/deny-all API — the most reliable dismissal
+  method, covering thousands of sites each. Cookie-Script directly fixes
+  `1a-immobilienmarkt.de`.
+- **Heuristic text-based dismissal** for unknown / custom banners that no
+  CMP adapter or selector list covers (e.g. the "Communice" CMS banner on
+  `dasing.de`). The default handler now matches button labels against a
+  multilingual accept/reject phrase set (en/de/fr/es/it/nl), but only when
+  the button sits inside a banner-like, cookie-context ancestor
+  (a modal dialog or fixed/sticky element whose text mentions
+  cookies/consent). Reject is preferred over accept. Tightly constrained
+  to avoid clicking legitimate page UI.
+- **Scroll-lock restore**: after a heuristic dismissal, an
+  `overflow:hidden` lock on `<html>`/`<body>` is released so the page
+  scrolls again. Scoped to the heuristic path so legitimate modals are
+  never unlocked.
 - Site rule for `whereby.com`. The cookie banner is a custom-built
   Framer overlay (not OneTrust/Cookiebot/Didomi), so the CMP-API
   handler doesn't match. The rule hides the banner footer via
