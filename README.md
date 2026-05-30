@@ -37,30 +37,26 @@ The minimum versions follow from `declarativeNetRequest`'s dynamic-rule support 
 
 ## Install
 
-<!--
-  Once a store listing goes live, uncomment the matching block below and
-  replace the placeholder. Each block is independent — you can unblock
-  Firefox before Chrome, etc.
+<p>
+  <a href="https://addons.mozilla.org/firefox/addon/crumble/"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get Crumble for Firefox" height="65"></a>
+  <a href="https://chromewebstore.google.com/detail/crumble/obanfpkcbgpgcibdfnaenkkanjbalbjg"><img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="Get Crumble for Chrome" height="65"></a>
+</p>
 
-  FF_SLUG     — AMO slug, e.g. "crumble" (from addons.mozilla.org/firefox/addon/<slug>)
-  CWS_EXT_ID  — 32-character Chrome Web Store extension ID
-  EDGE_EXT_ID — Edge Add-ons extension ID (Edge also accepts the Chrome .crx)
+<!--
+  When the Edge Add-ons listing goes live, uncomment the badge below and
+  replace EDGE_EXT_ID with the actual extension ID. Edge also accepts
+  the same Chrome `.crx`, so users on Edge can install from the Chrome
+  Web Store today.
 
 <p>
-  <a href="https://addons.mozilla.org/firefox/addon/FF_SLUG"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get Crumble for Firefox" height="65"></a>
-  <a href="https://chromewebstore.google.com/detail/crumble/CWS_EXT_ID"><img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="Get Crumble for Chrome" height="65"></a>
   <a href="https://microsoftedge.microsoft.com/addons/detail/crumble/EDGE_EXT_ID"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Get_it_from_Microsoft_Badge.svg/320px-Get_it_from_Microsoft_Badge.svg.png" alt="Get Crumble for Edge" height="65"></a>
 </p>
 -->
 
-Until the Chrome Web Store and Firefox Add-ons listings are live, install Crumble manually from the latest GitHub release:
+Alternatively, install manually from a [GitHub release](https://github.com/mntxsn/crumble/releases/latest):
 
-[Latest release →](https://github.com/mntxsn/crumble/releases/latest)
-
-- **Firefox**: download `crumble.xpi` (or `latest.xpi` once signed) from the release page and drop it on `about:addons`.
+- **Firefox**: download `crumble.xpi` from the release page and drop it on `about:addons`. Note that Firefox only installs `.xpi` files signed by Mozilla, so the GitHub-release artefact only works in Firefox Developer Edition / Nightly with `xpinstall.signatures.required` set to `false`. For regular Firefox use the AMO link above.
 - **Chromium-based browsers**: download `crumble-chrome-source.zip`, unzip, then load the folder via `chrome://extensions` → _Developer mode_ → _Load unpacked_.
-
-Store badges will appear here once the listings are published.
 
 ## Features
 
