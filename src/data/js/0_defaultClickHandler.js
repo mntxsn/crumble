@@ -532,6 +532,220 @@
     return out;
   }
 
+  // ---------------------------------------------------------------------------
+  // Heuristic fallback (M2 text-based clicking + M3 scroll-lock restore).
+  //
+  // This runs only in the default handler, i.e. on pages where no site-specific
+  // rule matched. It targets unknown / custom-built banners (e.g. small CMS
+  // consent systems) that neither the CMP-API handler nor the selector lists
+  // cover. It is deliberately conservative to avoid clicking legitimate UI:
+  //
+  //   - only buttons/links whose EXACT trimmed text matches a known accept or
+  //     reject phrase (no substring matching)
+  //   - the button must live inside an ancestor that is banner-like (a modal
+  //     dialog, or position fixed/sticky) AND contains cookie/consent keywords
+  //   - reject/deny is preferred over accept (privacy-first)
+  //   - one click per pass; clicked elements are marked so they aren't reclicked
+  // ---------------------------------------------------------------------------
+
+  const COOKIE_CONTEXT =
+    /cookie|consent|einwillig|zustimm|datenschutz|privacy|gdpr|dsgvo|rgpd|consentement|consentimiento|privacidad|privacidade|toestemming|cookiebeleid/i;
+
+  // Exact button labels (trimmed, lowercased, whitespace-collapsed).
+  const REJECT_PHRASES = new Set([
+    "reject all",
+    "reject",
+    "reject all cookies",
+    "decline",
+    "decline all",
+    "deny",
+    "deny all",
+    "refuse all",
+    "refuse",
+    "only necessary",
+    "only essential",
+    "necessary only",
+    "use necessary cookies only",
+    "alle ablehnen",
+    "ablehnen",
+    "alle verweigern",
+    "nur notwendige",
+    "nur notwendige cookies",
+    "nur essenzielle",
+    "nur erforderliche",
+    "essenzielle cookies",
+    "nur technisch notwendige",
+    "tout refuser",
+    "refuser",
+    "refuser tout",
+    "continuer sans accepter",
+    "rechazar todo",
+    "rechazar",
+    "rifiuta tutto",
+    "rifiuta",
+    "alles weigeren",
+    "weigeren",
+    "alleen noodzakelijke",
+  ]);
+
+  const ACCEPT_PHRASES = new Set([
+    "accept all",
+    "accept",
+    "accept all cookies",
+    "accept cookies",
+    "i accept",
+    "agree",
+    "i agree",
+    "allow all",
+    "allow cookies",
+    "got it",
+    "ok",
+    "okay",
+    "alle akzeptieren",
+    "akzeptieren",
+    "alle annehmen",
+    "annehmen",
+    "zustimmen",
+    "einverstanden",
+    "verstanden",
+    "alle cookies akzeptieren",
+    "alle cookies erlauben",
+    "tout accepter",
+    "accepter",
+    "j'accepte",
+    "accepter tout",
+    "aceptar todo",
+    "aceptar",
+    "accetta tutto",
+    "accetta",
+    "alle accepteren",
+    "accepteren",
+    "akkoord",
+  ]);
+
+  function isVisible(el) {
+    if (!el || !el.getBoundingClientRect) return false;
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return false;
+    let cs;
+    try {
+      cs = getComputedStyle(el);
+    } catch {
+      return false;
+    }
+    return (
+      cs.display !== "none" && cs.visibility !== "hidden" && cs.opacity !== "0"
+    );
+  }
+
+  function normText(el) {
+    return (el.textContent || "").trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  // Walk up (across shadow boundaries) looking for a banner-like, cookie-context
+  // ancestor. Returns the ancestor element or null.
+  function cookieBannerAncestor(el) {
+    let node = el;
+    let hops = 0;
+    while (node && hops < 8) {
+      if (node.nodeType === 1) {
+        let bannerLike = false;
+        try {
+          if (
+            node.matches &&
+            node.matches("dialog, [role='dialog'], [aria-modal='true']")
+          ) {
+            bannerLike = true;
+          } else {
+            const cs = getComputedStyle(node);
+            if (cs.position === "fixed" || cs.position === "sticky") {
+              bannerLike = true;
+            }
+          }
+        } catch {
+          // getComputedStyle / matches not available — skip this node
+        }
+        if (bannerLike) {
+          const txt = (node.textContent || "").toLowerCase();
+          if (txt.length < 3000 && COOKIE_CONTEXT.test(txt)) {
+            return node;
+          }
+        }
+      }
+      node =
+        node.parentNode ||
+        (node.getRootNode && node.getRootNode() && node.getRootNode().host);
+      hops++;
+    }
+    return null;
+  }
+
+  // M3: restore page scrolling when a banner locked it via overflow:hidden.
+  // Scoped to run only after a heuristic dismissal, so we never unlock a
+  // legitimate modal the user is interacting with.
+  function restoreScroll() {
+    for (const el of [document.documentElement, document.body]) {
+      if (!el) continue;
+      try {
+        const cs = getComputedStyle(el);
+        if (cs.overflow === "hidden" || cs.overflowY === "hidden") {
+          el.style.setProperty("overflow", "auto", "important");
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
+  function heuristicClick(btn) {
+    if (!btn || btn.classList.contains("idcac")) return false;
+    if (!isVisible(btn)) return false;
+    btn.classList.add("idcac");
+    try {
+      if (btn.disabled) btn.disabled = false;
+    } catch {
+      // not a form control
+    }
+    btn.click();
+    if (typeof chrome == "object" && chrome.runtime) {
+      chrome.runtime.sendMessage({
+        command: "cookie_warning_dismissed",
+        url: document.location.href,
+      });
+    }
+    restoreScroll();
+    return true;
+  }
+
+  function heuristicPass() {
+    const buttons = queryAllDeep(
+      document,
+      "button, [role='button'], a[href], input[type='button'], input[type='submit']"
+    );
+    let rejectBtn = null;
+    let acceptBtn = null;
+
+    for (const btn of buttons) {
+      if (btn.classList && btn.classList.contains("idcac")) continue;
+      const t = normText(btn);
+      if (!t || t.length > 40) continue;
+      const isReject = REJECT_PHRASES.has(t);
+      const isAccept = !isReject && ACCEPT_PHRASES.has(t);
+      if (!isReject && !isAccept) continue;
+      if (!isVisible(btn)) continue;
+      if (!cookieBannerAncestor(btn)) continue;
+
+      if (isReject && !rejectBtn) rejectBtn = btn;
+      else if (isAccept && !acceptBtn) acceptBtn = btn;
+      if (rejectBtn) break; // reject wins, stop scanning
+    }
+
+    // Prefer reject; fall back to accept.
+    if (heuristicClick(rejectBtn || acceptBtn)) {
+      timeoutDuration += 150;
+    }
+  }
+
   function doOnePass(counter) {
     timeoutDuration = 50;
     queryAllDeep(document, searchPairsJoinedKeys).forEach(function (box) {
@@ -602,6 +816,9 @@
         }
       }
     );
+
+    // Last resort: heuristic text-based dismissal for unknown banners.
+    heuristicPass();
   }
 
   function searchLoop(counter) {
