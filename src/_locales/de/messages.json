@@ -97,6 +97,14 @@
     "message": "Crumble unterstützen",
     "description": "Title/aria-label for the heart icon in the popup header that links to the GitHub Sponsors page."
   },
+  "popupPauseOnce": {
+    "message": "Cookie-Banner einmalig anzeigen",
+    "description": "Popup button: temporarily pause Crumble on this site and reload, so the user can interact with the site's own consent banner. Auto-expires."
+  },
+  "popupPauseOnceHint": {
+    "message": "Pausiert Crumble auf dieser Seite für 90 Sekunden und lädt sie neu, damit du den Cookie-Banner der Seite selbst beantworten kannst. Nützlich, wenn eine Seite erst nach dem Akzeptieren funktioniert.",
+    "description": "Tooltip for the show-banner-once button."
+  },
   "supportHeading": {
     "message": "Crumble unterstützen",
     "description": "Section heading for the support/donate card on the options page."

@@ -35,6 +35,7 @@ function applyTheme(theme) {
 }
 
 const toggle = document.getElementById("toggle");
+const pause = document.getElementById("pause");
 const refresh = document.getElementById("refresh");
 const report = document.getElementById("report");
 const options = document.getElementById("options");
@@ -65,6 +66,19 @@ options.addEventListener("click", function () {
   chrome.runtime.sendMessage(
     {
       command: "open_options_page",
+    },
+    () => window.close()
+  );
+});
+
+// "Show banner once": pauses Crumble on this domain for ~90 s and reloads,
+// so the site's own consent banner can be interacted with. Auto-expires —
+// no need to toggle anything back.
+pause.addEventListener("click", function () {
+  chrome.runtime.sendMessage(
+    {
+      command: "pause_once",
+      tabId: currentTab.id,
     },
     () => window.close()
   );
@@ -102,16 +116,19 @@ function reloadMenu(enableRefreshButton) {
           );
           toggle.hidden = false;
           report.hidden = Boolean(message.tab.whitelisted);
+          pause.hidden = Boolean(message.tab.whitelisted);
         } else {
           toggle.textContent = "";
           toggle.hidden = true;
           report.hidden = true;
+          pause.hidden = true;
         }
 
         if (typeof enableRefreshButton != "undefined") {
           refresh.hidden = false;
           toggle.hidden = true;
           report.hidden = true;
+          pause.hidden = true;
         }
       }
     );

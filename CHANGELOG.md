@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **No more banner flash (FOUC fix).** `common.css` is now registered as
+  a declarative content script via
+  `chrome.scripting.registerContentScripts` with `runAt: document_start`,
+  so the browser applies the hiding rules **before first paint** — no
+  service-worker round trip. Previously the CSS was injected from
+  `webNavigation.onCommitted`, and on cold service-worker starts the
+  banner could render for a frame before being hidden. Whitelisted (and
+  temporarily paused) domains are carved out via `excludeMatches`; the
+  registration is rebuilt on every settings change. The programmatic
+  injection in `doTheMagic` stays as a belt-and-braces fallback.
+- **"Show cookie banner once" popup button.** Some sites only work after
+  a real consent interaction (videos, embeds, logins) — hiding the
+  banner forever breaks them, and the whitelist toggle was a clumsy
+  workaround (toggle → reload → accept → toggle back). The new button
+  pauses Crumble for the tab's domain for 90 seconds (skips dismissal
+  logic, carves the domain out of the registered CSS, adds a DNR allow
+  rule) and reloads the page so the site's own banner can be answered.
+  The pause expires automatically; the tab badge shows ⏸ while active.
+  New locale keys `popupPauseOnce` / `popupPauseOnceHint` (en + de;
+  other locales fall back to English).
+
 - **Nine more CMP API adapters** in the consent-API handler: Usercentrics,
   Cookie-Script, Complianz, Klaro, Osano, iubenda, Cookie Information,
   consentmanager, and Tarteaucitron (up from 5 to 14). Each calls the

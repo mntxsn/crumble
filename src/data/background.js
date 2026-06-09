@@ -12,6 +12,15 @@ let settings = {
   debug: false,
 };
 
+// Domains where the user clicked "show banner once" in the popup. Maps
+// domain → expiry timestamp. Short-lived and in-memory only: if the service
+// worker dies, the next updateSettings() prunes/rebuilds everything, so a
+// stale pause can never stick around.
+const pausedDomains = {};
+const PAUSE_DURATION_MS = 90000;
+
+const COMMON_CSS_SCRIPT_ID = "crumble-common-css";
+
 const SYNC_FLAG_KEY = "syncSettings";
 const DEFAULT_SETTINGS = {
   whitelistedDomains: {},
@@ -80,7 +89,6 @@ function setDisabledBadge(tabId) {
 
 // Whitelisting
 async function updateSettings() {
-  lastDeclarativeNetRuleId = 1;
   settings = await loadSettingsFromStorage();
   debugLog("settings reloaded", {
     whitelisted: Object.keys(settings.whitelistedDomains).length,
@@ -88,30 +96,95 @@ async function updateSettings() {
     debug: settings.debug,
   });
   await updateWhitelistRules();
+  await updateCssRegistration();
+}
+
+// Whitelisted domains + still-active "show banner once" pauses. Expired
+// pauses are pruned as a side effect.
+function getAllowedDomains() {
+  const now = Date.now();
+  const domains = new Set(
+    Object.entries(settings.whitelistedDomains)
+      .filter(([, enabled]) => enabled)
+      .map(([domain]) => domain)
+  );
+  for (const [domain, expiry] of Object.entries(pausedDomains)) {
+    if (expiry > now) domains.add(domain);
+    else delete pausedDomains[domain];
+  }
+  return domains;
 }
 
 async function updateWhitelistRules() {
+  lastDeclarativeNetRuleId = 1;
   const previousRules = (
     await chrome.declarativeNetRequest.getDynamicRules()
   ).map((v) => v.id);
 
-  const addRules = Object.entries(settings.whitelistedDomains)
-    .filter(([, enabled]) => enabled)
-    .map(([domain]) => ({
-      id: lastDeclarativeNetRuleId++,
-      priority: 1,
-      action: { type: "allow" },
-      condition: {
-        urlFilter: "*",
-        resourceTypes: ["script", "stylesheet", "xmlhttprequest", "image"],
-        initiatorDomains: [domain],
-      },
-    }));
+  const addRules = [...getAllowedDomains()].map((domain) => ({
+    id: lastDeclarativeNetRuleId++,
+    priority: 1,
+    action: { type: "allow" },
+    condition: {
+      urlFilter: "*",
+      resourceTypes: ["script", "stylesheet", "xmlhttprequest", "image"],
+      initiatorDomains: [domain],
+    },
+  }));
 
   await chrome.declarativeNetRequest.updateDynamicRules({
     addRules,
     removeRuleIds: previousRules,
   });
+}
+
+// Register common.css as a declarative content script at document_start.
+// The browser applies it before first paint — no service-worker round trip,
+// which eliminates the banner flash that programmatic insertCSS (triggered
+// from webNavigation events) can't avoid on cold starts. Whitelisted and
+// paused domains are carved out via excludeMatches.
+async function updateCssRegistration() {
+  if (
+    !chrome.scripting ||
+    typeof chrome.scripting.registerContentScripts !== "function"
+  ) {
+    return;
+  }
+
+  const excludeMatches = [];
+  for (const domain of getAllowedDomains()) {
+    // Guard against entries that would invalidate the whole registration.
+    if (!/^[a-z0-9.-]+$/i.test(domain)) continue;
+    excludeMatches.push(`*://${domain}/*`, `*://*.${domain}/*`);
+  }
+
+  const script = {
+    id: COMMON_CSS_SCRIPT_ID,
+    css: ["data/css/common.css"],
+    matches: ["http://*/*", "https://*/*"],
+    runAt: "document_start",
+    allFrames: true,
+    persistAcrossSessions: true,
+  };
+  if (excludeMatches.length) {
+    script.excludeMatches = excludeMatches;
+  }
+
+  try {
+    // Unregister + register instead of update: update keeps properties that
+    // aren't specified, so a previously-set excludeMatches could never be
+    // cleared again.
+    try {
+      await chrome.scripting.unregisterContentScripts({
+        ids: [COMMON_CSS_SCRIPT_ID],
+      });
+    } catch {
+      // not registered yet — fine
+    }
+    await chrome.scripting.registerContentScripts([script]);
+  } catch (err) {
+    console.warn("Common CSS registration failed:", err);
+  }
 }
 
 function isWhitelisted(tab) {
@@ -185,6 +258,38 @@ async function toggleWhitelist(tab) {
     }
   }
   await updateWhitelistRules();
+}
+
+// "Show banner once": pause Crumble for this tab's domain for a short window
+// (CSS exclude + DNR allow + skip in doTheMagic), then reload the tab so the
+// site's own consent banner can render and the user can interact with it.
+// The pause expires on its own — no manual re-enable needed. Sites that only
+// work after a real consent interaction (videos, embeds, logins) are the
+// target use case.
+async function pauseOnce(tabId) {
+  const tab = tabList[tabId];
+  if (!tab || !tab.hostname) return;
+
+  pausedDomains[tab.hostname] = Date.now() + PAUSE_DURATION_MS;
+  debugLog("pause once", tab.hostname);
+
+  await updateWhitelistRules();
+  await updateCssRegistration();
+  chrome.tabs.reload(tabId);
+
+  // Re-arm after expiry. If the service worker dies first, the next
+  // updateSettings() prunes the expired entry and rebuilds both rule sets.
+  setTimeout(async () => {
+    if (pausedDomains[tab.hostname] <= Date.now()) {
+      delete pausedDomains[tab.hostname];
+      try {
+        await updateWhitelistRules();
+        await updateCssRegistration();
+      } catch (err) {
+        console.warn("Pause expiry cleanup failed:", err);
+      }
+    }
+  }, PAUSE_DURATION_MS + 1000);
 }
 
 // Maintain tab list
@@ -387,6 +492,17 @@ function activateDomain(hostname, tabId, frameId) {
   return status;
 }
 
+// "Show banner once" check: true while the tab's domain has an active pause.
+function isPausedTab(tab) {
+  if (!tab) return false;
+  const now = Date.now();
+  if (tab.hostname && pausedDomains[tab.hostname] > now) return true;
+  for (const level of tab.host_levels || []) {
+    if (pausedDomains[level] > now) return true;
+  }
+  return false;
+}
+
 function doTheMagic(tabId, frameId, anotherTry) {
   if (!tabList[tabId] || !isHttpUrl(tabList[tabId].url)) {
     return;
@@ -394,6 +510,11 @@ function doTheMagic(tabId, frameId, anotherTry) {
 
   if (tabList[tabId].whitelisted) {
     setDisabledBadge(tabId);
+    return;
+  }
+
+  if (isPausedTab(tabList[tabId])) {
+    setBadge(tabId, "⏸");
     return;
   }
 
@@ -512,6 +633,12 @@ chrome.runtime.onMessage.addListener((request, info, sendResponse) => {
         } else if (request.command == "report_website") {
           reportWebsite(info, tabList[request.tabId], sendResponse);
           responseSend = true;
+        } else if (request.command == "pause_once") {
+          // "Show banner once" — pause for this domain, reload, auto-expire.
+          responseSend = true;
+          pauseOnce(request.tabId)
+            .catch((err) => console.error("Pause failed:", err))
+            .finally(() => sendResponse());
         } else if (request.command == "refresh_page") {
           chrome.tabs.reload(request.tabId);
         }
