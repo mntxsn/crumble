@@ -5,7 +5,10 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.0.3]
+
+Detection upgrade: more CMP APIs, heuristics for unknown banners, no
+more banner flash, and an escape hatch for sites that need real consent.
 
 ### Added
 
